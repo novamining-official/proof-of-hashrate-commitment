@@ -1,0 +1,30 @@
+{
+  "path": {
+    "root": {
+      "id": "f61070df851b2fa44eb9f0bc63b69147229796068dd55676265f147d71b25ced",
+      "leftValue": 246,
+      "rightValue": 141,
+      "leftHash": "aff79848e867b6c4b3782648a1fe4de0bf2d44d972d16d5f87f4b026d9dd7296",
+      "rightHash": "4c120f965b806dc6864a4dd3d0f1ca9885516f90bb7ae7183608e154bc6ff601",
+      "left": {
+        "id": "aff79848e867b6c4b3782648a1fe4de0bf2d44d972d16d5f87f4b026d9dd7296",
+        "leftValue": 146,
+        "rightValue": 100,
+        "leftHash": "c9e9e8ed32fb76d6e02fcc722ed05f9a103f3686b17944ba7472542d352683e6",
+        "rightHash": "bdc78f932aeac3eb47c9223ef733c1a3ddaa8083604733877b392f7df5f35124",
+        "left": {
+          "id": "c9e9e8ed32fb76d6e02fcc722ed05f9a103f3686b17944ba7472542d352683e6",
+          "leftValue": 38,
+          "rightValue": 108,
+          "leftHash": "b7b98cd43d4d24fba90b39ce3ee7e2927c1741703acf5eef6c73c87ded1f1693",
+          "rightHash": "64321880986b382735db5939d30c6ca1de66df6005bc15e70ebf2001ab55f1fa",
+          "right": {
+            "id": "64321880986b382735db5939d30c6ca1de66df6005bc15e70ebf2001ab55f1fa",
+            "leftValue": 108,
+            "rightValue": 0
+          }
+        }
+      }
+    }
+  }
+}

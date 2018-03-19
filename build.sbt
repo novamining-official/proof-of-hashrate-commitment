@@ -12,12 +12,21 @@ lazy val root = (project in file(".")).
     )),
     name := "proof_of_hashrate_commitment",
     libraryDependencies ++= Seq(
+      //JSON
       "org.json4s" %% "json4s-native" % "3.5.3",
       "org.json4s" %% "json4s-jackson" % "3.5.3",
+
+      //TEST FRAMEWORK
       "org.scalatest" %% "scalatest" % "3.0.4" % "test",
+
+      //DB
       "com.typesafe.slick" %% "slick" % "3.2.+",
       "com.h2database" % "h2" % "1.4.+",
-      "com.zaxxer" % "HikariCP" % "2.5.+" % "test"
+      "com.zaxxer" % "HikariCP" % "2.5.+" % "test",
+
+      //LOGGING FRAMEWORK
+      "ch.qos.logback" % "logback-classic" % "1.2.3",
+      "com.typesafe.scala-logging" %% "scala-logging" % "3.5.+"
     )
   )
 

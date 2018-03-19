@@ -10,11 +10,14 @@ lazy val root = (project in file(".")).
       mainClass in Compile := Some("Boot"),
       ScalariformKeys.preferences := scalariformPref.value
     )),
-    name := "liability_proof",
+    name := "proof_of_hashrate_commitment",
     libraryDependencies ++= Seq(
       "org.json4s" %% "json4s-native" % "3.5.3",
       "org.json4s" %% "json4s-jackson" % "3.5.3",
-      "org.scalatest" %% "scalatest" % "3.0.4" % "test"
+      "org.scalatest" %% "scalatest" % "3.0.4" % "test",
+      "com.typesafe.slick" %% "slick" % "3.2.+",
+      "com.h2database" % "h2" % "1.4.+",
+      "com.zaxxer" % "HikariCP" % "2.5.+" % "test"
     )
   )
 

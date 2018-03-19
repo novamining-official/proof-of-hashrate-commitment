@@ -17,6 +17,4 @@ object Boot extends App {
     DatabaseConfig.forConfig[JdbcProfile](configPath)
   }
 
-  def db = database.db
-
 }

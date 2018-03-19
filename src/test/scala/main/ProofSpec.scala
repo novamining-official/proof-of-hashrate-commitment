@@ -1,4 +1,4 @@
-package testexample
+package main
 
 import scala.io.Source
 import proof.MerkleTree.{Account, Tree}

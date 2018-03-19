@@ -16,10 +16,7 @@ object MerkleTree {
 
   }
 
-  case class Tree(
-    private[proof] val accounts: Seq[Account],
-    private[proof] val root: Node
-  ) {
+  case class Tree(accounts: Seq[Account], root: Node) {
 
     def rootDigest = root.id
 
@@ -72,6 +69,16 @@ object MerkleTree {
 
     def addAccount(account: Account): Tree = {
       Tree(accounts :+ account)
+    }
+
+    def toSeq(): Seq[Node] = {
+      toSeqNode(Some(root))
+    }
+
+    private def toSeqNode(node: Option[Node]): Seq[Node] = node match {
+      case None                => Seq.empty
+      case Some(n) if n.isLeaf => Seq(n)
+      case Some(n)             => Seq(n.copy(left = None, right = None)) ++ toSeqNode(n.left) ++ toSeqNode(n.right)
     }
 
   }

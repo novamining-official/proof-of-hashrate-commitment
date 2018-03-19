@@ -7,7 +7,7 @@ lazy val root = (project in file(".")).
       organization    := "araspitzu",
       scalaVersion    := "2.12.4",
       version         := "0.0.1",
-      mainClass in Compile := Some("Boot"),
+      mainClass in Compile := Some("common.Boot"),
       ScalariformKeys.preferences := scalariformPref.value
     )),
     name := "proof_of_hashrate_commitment",

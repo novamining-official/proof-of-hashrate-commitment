@@ -9,5 +9,4 @@ object Configuration {
     val jdbcUrl = config.getString(s"$configPath.db.url")
   }
 
-
 }

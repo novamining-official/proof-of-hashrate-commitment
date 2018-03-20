@@ -16,7 +16,3 @@ The applications is written in Scala and requires JDK8, docker and sbt
 ## Installation
 
 TODO
-
-## Gotchas
-
-TODO

@@ -1,7 +1,9 @@
-package main
+package testexample
+
+import java.nio.file.{ Files, Paths }
 
 import scala.io.Source
-import proof.MerkleTree.{Account, Tree}
+import proof.MerkleTree.{ Account, Tree }
 import proof.MerkleTree._
 import org.scalatest._
 import org.json4s._
@@ -9,16 +11,21 @@ import org.json4s.jackson.JsonMethods._
 import org.json4s.jackson.Serialization
 import org.json4s.jackson.Serialization._
 import proof.Proof
+
 import scala.util.Random
 
 class ProofSpec extends FlatSpec with Matchers {
 
-  def resourceAsString(fileName: String) = Source.fromURL(getClass.getResource(fileName)).mkString
+  def resourceAsString(fileName: String) = Source.fromURL(getClass.getResource(s"/$fileName")).mkString
+  def writeToFile(data: String, fileName: String) = Files.write(
+    Paths.get(s"src/test/resources/$fileName"),
+    data.getBytes
+  )
 
   implicit val formats = Serialization.formats(NoTypeHints)
 
-  lazy val passingTestMock = resourceAsString("/mocks/mock_data.json")
-  lazy val accountsTestMock = resourceAsString("/mocks/accounts.json")
+  lazy val passingTestMock = resourceAsString("mock_data.json")
+  lazy val accountsTestMock = resourceAsString("accounts.json")
 
   lazy val randomAccounts: Stream[Account] = Account(
     user = Random.alphanumeric.take(6).mkString,
@@ -100,7 +107,7 @@ class ProofSpec extends FlatSpec with Matchers {
     val Some(proof) = tree.findProofByAccount(Account("Bob", 108, "raccoon"))
 
     val correctRootDigest = tree.rootDigest
-    val wrongDigest = sha256("Yo")
+    val wrongDigest = Node.sha256("Yo")
 
     proof.isValid(correctRootDigest, Account("Bob", 108, "raccoon")) shouldBe true
     proof.isValid(wrongDigest, Account("Bob", 108, "raccoon")) shouldBe false
@@ -111,8 +118,8 @@ class ProofSpec extends FlatSpec with Matchers {
 
     //digest from mocks/mock_data.json
     val rootDigest = "f61070df851b2fa44eb9f0bc63b69147229796068dd55676265f147d71b25ced"
-    val bobProof = read[Proof.ProofOfLiability](resourceAsString("/mocks/bob_proof.json"))
-    
+    val bobProof = read[Proof.ProofOfLiability](resourceAsString("bob_proof.json"))
+
     bobProof.isValid(rootDigest, Account("Bob", 108, "raccoon")) shouldBe true
     bobProof.isValid(rootDigest, Account("Bob", 108, "rhino")) shouldBe false
     bobProof.isValid(rootDigest, Account("Bobby", 108, "raccoon")) shouldBe false

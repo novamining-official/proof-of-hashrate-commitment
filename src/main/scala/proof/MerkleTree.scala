@@ -86,6 +86,40 @@ object MerkleTree {
   object Tree {
     //TODO scramble account ordering?
     def apply(accounts: Seq[Account]): Tree = Tree(accounts, mkTree(accounts.sorted))
+
+    def toArray(tree: Tree): Array[Option[Node]] = {
+      //FIXME use tighter size for the array
+      val array = Array.fill[Option[Node]](math.pow(2, tree.accounts.size).toInt + 1)(None)
+      toArrayNode(Some(tree.root), 0, array)
+      array
+    }
+
+    def fromArray(accounts: Seq[Account], array: Array[Option[Node]]): Tree = {
+      Tree(accounts, fromArrayRec(array, 0).get)
+    }
+
+    private def toArrayNode(node: Option[Node], indexAt: Int, array: Array[Option[Node]]): Unit = node match {
+      case None =>
+      case Some(n) =>
+        // blank out the nested references, we know them via the implicit ordering of the binary heap
+        array(indexAt) = Some(n.copy(leftHash = None, rightHash = None, left = None, right = None))
+        toArrayNode(n.left, indexAt * 2 + 1, array)
+        toArrayNode(n.right, indexAt * 2 + 2, array)
+    }
+
+    def fromArrayRec(array: Array[Option[Node]], indexAt: Int): Option[Node] = {
+
+      if (indexAt < 0 || indexAt >= array.size)
+        return None
+
+      array(indexAt).map { node =>
+        node.copy(
+          left = fromArrayRec(array, indexAt * 2 + 1),
+          right = fromArrayRec(array, indexAt * 2 + 2)
+        )
+      }
+    }
+
   }
 
   case class Node(
@@ -111,8 +145,8 @@ object MerkleTree {
 
     override def toString: String = {
       isLeaf match {
-        case true  => s"ID: $id  val:$totalValue"
-        case false => s"\nID: $id  val:$totalValue \n  -- L:${left.map(_.toString)} \n  -- R:${right.map(_.toString)}"
+        case true  => s"LEAF [$id  $totalValue]"
+        case false => s"NODE [$id  $totalValue left ${leftHash.map(_.toString)} right: ${rightHash.map(_.toString)}]"
       }
     }
   }
@@ -128,13 +162,13 @@ object MerkleTree {
     def mkLeafId(account: Account): String =
       sha256(s"${account.user} | ${account.balance} | ${account.nonce}")
 
-  }
+    lazy val md = MessageDigest.getInstance("SHA-256")
 
-  lazy val md = MessageDigest.getInstance("SHA-256")
+    def sha256(msg: String): String = {
+      md.update(msg.getBytes)
+      md.digest.map("%02x".format(_)).mkString
+    }
 
-  def sha256(msg: String): String = {
-    md.update(msg.getBytes)
-    md.digest.map("%02x".format(_)).mkString
   }
 
   private def mkTree(accounts: Seq[Account]): Node = accounts match {

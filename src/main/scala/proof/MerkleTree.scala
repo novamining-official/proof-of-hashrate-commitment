@@ -81,6 +81,7 @@ object MerkleTree {
     def apply(accounts: Seq[Account]): Tree = Tree(accounts, mkTree(accounts.sorted))
 
     def toArray(tree: Tree): Array[Option[Node]] = {
+      //FIXME use tighter size for the array
       val array = Array.fill[Option[Node]](math.pow(2, tree.accounts.size).toInt + 1)(None)
       toArrayNode(Some(tree.root), 0, array)
       array

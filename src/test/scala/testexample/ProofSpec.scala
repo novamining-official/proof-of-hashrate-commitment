@@ -3,7 +3,6 @@ package testexample
 import java.nio.file.{ Files, Paths }
 
 import common.JsonSupport
-
 import scala.io.Source
 import proof.MerkleTree.{ Account, Tree }
 import proof.MerkleTree._
@@ -173,30 +172,28 @@ class ProofSpec extends FlatSpec with Matchers with JsonSupport {
     val tree = Tree.build(accounts = users)
 
     val array = Tree.toArray(tree)
-    val nodesInArray = array.filter(_.isDefined).size
     val Some(rootNode) = array(0)
 
-    nodesInArray shouldBe tree.numNodes
+    array.filter(_.isDefined).size shouldBe tree.numNodes
     rootNode.leftValue + rootNode.rightValue shouldBe tree.totalBalance
     rootNode.id shouldBe tree.rootDigest
 
     //compare with serialized version to spot breaking changes
-    val jsArrayString = writePretty(array)
-    val storedArray = resourceAsString("mocks/stored_array.json")
+    val jsTree = writePretty(tree)
+    val storedTree = resourceAsString("mocks/stored_array.json")
 
-    jsArrayString == storedArray shouldBe true
+    jsTree shouldBe storedTree
 
   }
 
   it should "de-serialize from an array" in {
-    val users = parse(accountsTestMock).extract[Seq[Account]]
-    val tree = Tree.build(accounts = users)
+    val users = parse(passingTestMock).extract[Seq[Account]]
 
-    val array = Tree.toArray(tree)
-    val readTree = Tree.fromArray(BITCOIN_CHAIN, users, array)
+    val tree = parse(resourceAsString("mocks/stored_array.json")).extract[Tree]
+    val buildTree = Tree.build(accounts = users)
 
-    readTree.numNodes shouldBe tree.numNodes
-    readTree.maxDepth shouldBe tree.maxDepth
-    readTree.totalBalance shouldBe tree.totalBalance
+    buildTree.numNodes shouldBe tree.numNodes
+    buildTree.maxDepth shouldBe tree.maxDepth
+    buildTree.totalBalance shouldBe tree.totalBalance
   }
 }

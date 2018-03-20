@@ -28,7 +28,7 @@ object MerkleTree {
   case class Tree(
     chainId: CHAIN_ID.Value,
     accounts: Seq[Account],
-    private[proof] val root: Node
+    root: Node
   ) {
 
     def rootDigest = root.id
@@ -90,15 +90,19 @@ object MerkleTree {
     //TODO scramble account ordering?
     def build(chainId: CHAIN_ID = BITCOIN_CHAIN, accounts: Seq[Account]): Tree = Tree(chainId, accounts, mkTree(accounts.sorted))
 
-    def toArray(tree: Tree): Array[Option[Node]] = {
+    def toArray(root: Node, size: Int): Array[Option[Node]] = {
       //FIXME use tighter size for the array
-      val array = Array.fill[Option[Node]](math.pow(2, tree.accounts.size).toInt + 1)(None)
-      toArrayNode(Some(tree.root), 0, array)
+      val array = Array.fill[Option[Node]](size)(None)
+      toArrayNode(Some(root), 0, array)
       array
     }
 
+    def toArray(tree: Tree): Array[Option[Node]] = toArray(tree.root, math.pow(2, tree.accounts.size).toInt + 1)
+
+    def fromArray(array: Array[Option[Node]]): Option[Node] = fromArrayRec(array, 0)
+
     def fromArray(chainId: CHAIN_ID, accounts: Seq[Account], array: Array[Option[Node]]): Tree = {
-      Tree(chainId, accounts, fromArrayRec(array, 0).get)
+      Tree(chainId, accounts, fromArray(array).get)
     }
 
     private def toArrayNode(node: Option[Node], indexAt: Int, array: Array[Option[Node]]): Unit = node match {

@@ -24,8 +24,8 @@ class ProofSpec extends FlatSpec with Matchers {
 
   implicit val formats = Serialization.formats(NoTypeHints)
 
-  lazy val passingTestMock = resourceAsString("mock_data.json")
-  lazy val accountsTestMock = resourceAsString("accounts.json")
+  lazy val passingTestMock = resourceAsString("mocks/mock_data.json")
+  lazy val accountsTestMock = resourceAsString("mocks/accounts.json")
 
   lazy val randomAccounts: Stream[Account] = Account(
     user = Random.alphanumeric.take(6).mkString,
@@ -118,7 +118,7 @@ class ProofSpec extends FlatSpec with Matchers {
 
     //digest from mock_data.json
     val rootDigest = "f61070df851b2fa44eb9f0bc63b69147229796068dd55676265f147d71b25ced"
-    val bobProof = read[Proof.ProofOfLiability](resourceAsString("bob_proof.json"))
+    val bobProof = read[Proof.ProofOfLiability](resourceAsString("mocks/bob_proof.json"))
 
     bobProof.isValid(rootDigest, Account("Bob", 108, "raccoon")) shouldBe true
     bobProof.isValid(rootDigest, Account("Bob", 108, "rhino")) shouldBe false
@@ -181,7 +181,7 @@ class ProofSpec extends FlatSpec with Matchers {
 
     //compare with serialized version to spot breaking changes
     val jsArrayString = writePretty(array)
-    val storedArray = resourceAsString("stored_array.json")
+    val storedArray = resourceAsString("mocks/stored_array.json")
 
     jsArrayString == storedArray shouldBe true
 

@@ -1,7 +1,7 @@
 package proof
 
 import java.security.MessageDigest
-import proof.Proof.ProofOfLiability
+import proof.ProofOfHashrate.Proof
 import scala.math._
 
 object MerkleTree {
@@ -37,8 +37,8 @@ object MerkleTree {
 
     def hasProofFor(account: Account): Boolean = findProofByAccount(account).isDefined
 
-    def findProofByAccount(account: Account): Option[ProofOfLiability] = {
-      mkProofPath(root, account).map(node => ProofOfLiability(Tree(chainId, Seq(account), node)))
+    def findProofByAccount(account: Account): Option[Proof] = {
+      mkProofPath(root, account).map(node => Proof(chainId, node))
     }
 
     private def mkProofPath(node: Node, account: Account): Option[Node] = {

@@ -2,12 +2,12 @@ package proof
 
 import proof.MerkleTree._
 
-object Proof {
+object ProofOfHashrate {
 
-  case class ProofOfLiability(path: Tree) {
+  case class Proof(chainId: CHAIN_ID.Value, root: Node) {
 
     def isValid(rootDigest: String, account: Account): Boolean = {
-      rootDigest == path.rootDigest && checkSubtreeProof(path.root, account)
+      rootDigest == root.id && checkSubtreeProof(root, account)
     }
 
   }

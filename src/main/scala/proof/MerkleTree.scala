@@ -74,11 +74,51 @@ object MerkleTree {
       Tree(accounts :+ account)
     }
 
+    def toArray(): Array[Option[Node]] = {
+      val array = Array.fill[Option[Node]](math.pow(2, accounts.size).toInt + 1)(None)
+      toArrayNode(Some(root), 0, array)
+      array
+    }
+
+    private def printArray(array: Array[Option[Node]]) = {
+      array.zipWithIndex.foreach {
+        case (Some(node), index) if node != null =>
+          println(s"[$index] = $node")
+        case _ =>
+      }
+    }
+
+    private def toArrayNode(node: Option[Node], indexAt: Int, array: Array[Option[Node]]): Unit = node match {
+      case None =>
+      case Some(n) =>
+        array(indexAt) = Some(n.copy(leftHash = None, rightHash = None, left = None, right = None)) // blank out the nested references
+        toArrayNode(n.left, indexAt * 2 + 1, array)
+        toArrayNode(n.right, indexAt * 2 + 2, array)
+    }
+
   }
 
   object Tree {
     //TODO scramble account ordering?
     def apply(accounts: Seq[Account]): Tree = Tree(accounts, mkTree(accounts.sorted))
+
+    def fromArray(accounts: Seq[Account], array: Array[Option[Node]]): Tree = {
+      Tree(accounts, fromArrayRec(array, 0).get)
+    }
+
+    def fromArrayRec(array: Array[Option[Node]], indexAt: Int): Option[Node] = {
+
+      if (indexAt < 0 || indexAt >= array.size)
+        return None
+
+      array(indexAt).map { node =>
+        node.copy(
+          left = fromArrayRec(array, indexAt * 2 + 1),
+          right = fromArrayRec(array, indexAt * 2 + 2)
+        )
+      }
+    }
+
   }
 
   case class Node(
@@ -104,8 +144,8 @@ object MerkleTree {
 
     override def toString: String = {
       isLeaf match {
-        case true  => s"ID: $id  val:$totalValue"
-        case false => s"\nID: $id  val:$totalValue \n  -- L:${left.map(_.toString)} \n  -- R:${right.map(_.toString)}"
+        case true  => s"LEAF [$id  $totalValue]"
+        case false => s"NODE [$id  $totalValue left ${leftHash.map(_.toString)} right: ${rightHash.map(_.toString)}]"
       }
     }
   }

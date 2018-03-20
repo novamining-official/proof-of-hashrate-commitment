@@ -4,6 +4,7 @@ import proof.MerkleTree._
 
 object ProofOfHashrate {
 
+  //TODO is chainId here necessary?
   case class Proof(chainId: CHAIN_ID.Value, root: Node) {
 
     def isValid(rootDigest: String, account: Account): Boolean = {

@@ -30,7 +30,7 @@ object NodeDbTable {
 
   }
 
-  private val nodesTable = TableQuery[NodeTable]
+  val nodesTable = TableQuery[NodeTable]
 
   def insertStoredNodes(nodes: Seq[StoredNode]): Future[Int] = db.run {
     nodesTable ++= nodes

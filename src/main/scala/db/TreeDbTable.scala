@@ -25,7 +25,7 @@ object TreeDbTable {
 
   }
 
-  private val treeTable = TableQuery[TreeTable]
+  val treeTable = TableQuery[TreeTable]
 
   def insertTree(tree: StoredTree): Future[Int] = db.run {
     treeTable += tree

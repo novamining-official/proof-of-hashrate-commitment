@@ -107,7 +107,7 @@ class ProofSpec extends FlatSpec with Matchers {
     val Some(proof) = tree.findProofByAccount(Account("Bob", 108, "raccoon"))
 
     val correctRootDigest = tree.rootDigest
-    val wrongDigest = sha256("Yo")
+    val wrongDigest = Node.sha256("Yo")
 
     proof.isValid(correctRootDigest, Account("Bob", 108, "raccoon")) shouldBe true
     proof.isValid(wrongDigest, Account("Bob", 108, "raccoon")) shouldBe false
@@ -171,7 +171,7 @@ class ProofSpec extends FlatSpec with Matchers {
     val users = parse(passingTestMock).extract[Seq[Account]]
     val tree = Tree(users)
 
-    val array = tree.toArray()
+    val array = Tree.toArray(tree)
     val nodesInArray = array.filter(_.isDefined).size
     val Some(rootNode) = array(0)
 
@@ -191,7 +191,7 @@ class ProofSpec extends FlatSpec with Matchers {
     val users = parse(accountsTestMock).extract[Seq[Account]]
     val tree = Tree(users)
 
-    val array = tree.toArray()
+    val array = Tree.toArray(tree)
     val readTree = Tree.fromArray(users, array)
 
     readTree.numNodes shouldBe tree.numNodes

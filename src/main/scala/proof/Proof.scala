@@ -4,12 +4,12 @@ import proof.MerkleTree._
 
 object Proof {
 
-  case class ProofOfLiability(
-    path: Tree
-  ) {
+  case class ProofOfLiability(path: Tree) {
+
     def isValid(rootDigest: String, account: Account): Boolean = {
       rootDigest == path.rootDigest && checkSubtreeProof(path.root, account)
     }
+
   }
 
   def checkNodeId(node: Node): Boolean = {

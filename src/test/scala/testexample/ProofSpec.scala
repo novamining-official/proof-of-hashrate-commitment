@@ -5,6 +5,7 @@ import java.nio.file.{ Files, Paths }
 import scala.io.Source
 import proof.MerkleTree.{ Account, Tree }
 import proof.MerkleTree._
+import proof.MerkleTree.CHAIN_ID._
 import org.scalatest._
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
@@ -56,7 +57,7 @@ class ProofSpec extends FlatSpec with Matchers {
 
     val users = parse(passingTestMock).extract[Seq[Account]]
 
-    val tree = Tree(users)
+    val tree = Tree.build(accounts = users)
     val rootDigest = tree.rootDigest
 
     tree.numNodes shouldBe 15
@@ -77,7 +78,7 @@ class ProofSpec extends FlatSpec with Matchers {
 
     val expectedNumNodes = 33
 
-    val tree = Tree(users)
+    val tree = Tree.build(accounts = users)
     val rootDigest = tree.rootDigest
 
     val accountToCheck = Account("mark", 462, "falcon")
@@ -97,13 +98,13 @@ class ProofSpec extends FlatSpec with Matchers {
 
   it should "not find a proof if the tree does not contain a certain user" in {
     val users = parse(passingTestMock).extract[Seq[Account]]
-    val tree = Tree(users)
+    val tree = Tree.build(accounts = users)
     tree.hasProofFor(Account("nope", 12, "cheetah")) shouldBe false
   }
 
   it should "validate a proof correctly (failing) given a wrong root digest" in {
     val users = parse(passingTestMock).extract[Seq[Account]]
-    val tree = Tree(users)
+    val tree = Tree.build(accounts = users)
     val Some(proof) = tree.findProofByAccount(Account("Bob", 108, "raccoon"))
 
     val correctRootDigest = tree.rootDigest
@@ -116,9 +117,19 @@ class ProofSpec extends FlatSpec with Matchers {
 
   it should "read a proof from file and check it against the root digest for user Bob" in {
 
+//    implicit val chainIdFormat
+
+    //    val users = parse(passingTestMock).extract[Seq[Account]]
+    //    val tree = Tree.build(accounts = users)
+    //
+    //    val Some(proof) = tree.findProofByAccount(Account("Bob", 108, "raccoon"))
+    //
+    //    writeToFile(writePretty(proof), "bob_xx.json")
+
     //digest from mock_data.json
     val rootDigest = "f61070df851b2fa44eb9f0bc63b69147229796068dd55676265f147d71b25ced"
-    val bobProof = read[Proof.ProofOfLiability](resourceAsString("mocks/bob_proof.json"))
+    val bobProofTree = read[Tree](resourceAsString("mocks/bob_proof.json"))
+    val bobProof = Proof.ProofOfLiability(bobProofTree)
 
     bobProof.isValid(rootDigest, Account("Bob", 108, "raccoon")) shouldBe true
     bobProof.isValid(rootDigest, Account("Bob", 108, "rhino")) shouldBe false
@@ -130,7 +141,7 @@ class ProofSpec extends FlatSpec with Matchers {
   it should "add an account and recompute the tree accordingly" in {
 
     val users = parse(passingTestMock).extract[Seq[Account]]
-    val tree = Tree(users)
+    val tree = Tree.build(accounts = users)
 
     val accountToAdd = Account("Diana", 223, "panther")
 
@@ -151,25 +162,25 @@ class ProofSpec extends FlatSpec with Matchers {
 
     //with power of two
     val eightUsers = randomAccounts.take(8).toList
-    checkTreeMetrics(Tree(eightUsers), eightUsers)
+    checkTreeMetrics(Tree.build(accounts = eightUsers), eightUsers)
 
     //with power of two - 1
     val fourteen = randomAccounts.take(16).toList
-    checkTreeMetrics(Tree(fourteen), fourteen)
+    checkTreeMetrics(Tree.build(accounts = fourteen), fourteen)
 
     //with power of two + 1
     val seventeen = randomAccounts.take(17).toList
-    checkTreeMetrics(Tree(seventeen), seventeen)
+    checkTreeMetrics(Tree.build(accounts = seventeen), seventeen)
 
     //with a lot of users
     val manyUsers = randomAccounts.take(4712).toList
-    checkTreeMetrics(Tree(manyUsers), manyUsers)
+    checkTreeMetrics(Tree.build(accounts = manyUsers), manyUsers)
 
   }
 
   it should "serialize to an array using binary heap" in {
     val users = parse(passingTestMock).extract[Seq[Account]]
-    val tree = Tree(users)
+    val tree = Tree.build(accounts = users)
 
     val array = Tree.toArray(tree)
     val nodesInArray = array.filter(_.isDefined).size
@@ -189,10 +200,10 @@ class ProofSpec extends FlatSpec with Matchers {
 
   it should "de-serialize from an array" in {
     val users = parse(accountsTestMock).extract[Seq[Account]]
-    val tree = Tree(users)
+    val tree = Tree.build(accounts = users)
 
     val array = Tree.toArray(tree)
-    val readTree = Tree.fromArray(users, array)
+    val readTree = Tree.fromArray(BITCOIN_CHAIN, users, array)
 
     readTree.numNodes shouldBe tree.numNodes
     readTree.maxDepth shouldBe tree.maxDepth

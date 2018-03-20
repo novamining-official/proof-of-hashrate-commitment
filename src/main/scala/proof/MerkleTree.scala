@@ -6,6 +6,15 @@ import scala.math._
 
 object MerkleTree {
 
+  case object CHAIN_ID extends Enumeration {
+    type CHAIN_ID = Value
+
+    val BITCOIN_CHAIN = Value("BITCOIN_CHAIN")
+    val ETHEREUM_CHAIN = Value("ETHEREUM_CHAIN")
+  }
+
+  import CHAIN_ID._
+
   case class Account(
     user: String,
     balance: Double,
@@ -17,7 +26,8 @@ object MerkleTree {
   }
 
   case class Tree(
-    private[proof] val accounts: Seq[Account],
+    chainId: CHAIN_ID.Value,
+    accounts: Seq[Account],
     private[proof] val root: Node
   ) {
 
@@ -28,7 +38,7 @@ object MerkleTree {
     def hasProofFor(account: Account): Boolean = findProofByAccount(account).isDefined
 
     def findProofByAccount(account: Account): Option[ProofOfLiability] = {
-      mkProofPath(root, account).map(node => ProofOfLiability(Tree(Seq(account), node)))
+      mkProofPath(root, account).map(node => ProofOfLiability(Tree(chainId, Seq(account), node)))
     }
 
     private def mkProofPath(node: Node, account: Account): Option[Node] = {
@@ -71,14 +81,14 @@ object MerkleTree {
     }
 
     def addAccount(account: Account): Tree = {
-      Tree(accounts :+ account)
+      Tree.build(chainId, accounts :+ account)
     }
 
   }
 
   object Tree {
     //TODO scramble account ordering?
-    def apply(accounts: Seq[Account]): Tree = Tree(accounts, mkTree(accounts.sorted))
+    def build(chainId: CHAIN_ID = BITCOIN_CHAIN, accounts: Seq[Account]): Tree = Tree(chainId, accounts, mkTree(accounts.sorted))
 
     def toArray(tree: Tree): Array[Option[Node]] = {
       //FIXME use tighter size for the array
@@ -87,8 +97,8 @@ object MerkleTree {
       array
     }
 
-    def fromArray(accounts: Seq[Account], array: Array[Option[Node]]): Tree = {
-      Tree(accounts, fromArrayRec(array, 0).get)
+    def fromArray(chainId: CHAIN_ID, accounts: Seq[Account], array: Array[Option[Node]]): Tree = {
+      Tree(chainId, accounts, fromArrayRec(array, 0).get)
     }
 
     private def toArrayNode(node: Option[Node], indexAt: Int, array: Array[Option[Node]]): Unit = node match {
@@ -100,7 +110,7 @@ object MerkleTree {
         toArrayNode(n.right, indexAt * 2 + 2, array)
     }
 
-    def fromArrayRec(array: Array[Option[Node]], indexAt: Int): Option[Node] = {
+    private def fromArrayRec(array: Array[Option[Node]], indexAt: Int): Option[Node] = {
 
       if (indexAt < 0 || indexAt >= array.size)
         return None

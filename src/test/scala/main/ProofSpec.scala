@@ -1,4 +1,4 @@
-package testexample
+package main
 
 import java.nio.file.{ Files, Paths }
 
@@ -17,15 +17,12 @@ import scala.util.Random
 class ProofSpec extends FlatSpec with Matchers {
 
   def resourceAsString(fileName: String) = Source.fromURL(getClass.getResource(s"/$fileName")).mkString
-  def writeToFile(data: String, fileName: String) = Files.write(
-    Paths.get(s"src/test/resources/$fileName"),
-    data.getBytes
-  )
+  def writeToFile(data: String, fileName: String) = Files.write(Paths.get(s"src/test/resources/mocks/$fileName"), data.getBytes)
 
   implicit val formats = Serialization.formats(NoTypeHints)
 
-  lazy val passingTestMock = resourceAsString("mock_data.json")
-  lazy val accountsTestMock = resourceAsString("accounts.json")
+  lazy val passingTestMock = resourceAsString("mocks/mock_data.json")
+  lazy val accountsTestMock = resourceAsString("mocks/accounts.json")
 
   lazy val randomAccounts: Stream[Account] = Account(
     user = Random.alphanumeric.take(6).mkString,
@@ -113,18 +110,18 @@ class ProofSpec extends FlatSpec with Matchers {
     proof.isValid(wrongDigest, Account("Bob", 108, "raccoon")) shouldBe false
 
   }
-  
+
   it should "read a proof from file and check it against the root digest for user Bob" in {
 
     //digest from mocks/mock_data.json
     val rootDigest = "f61070df851b2fa44eb9f0bc63b69147229796068dd55676265f147d71b25ced"
-    val bobProof = read[Proof.ProofOfLiability](resourceAsString("bob_proof.json"))
+    val bobProof = read[Proof.ProofOfLiability](resourceAsString("mocks/bob_proof.json"))
 
     bobProof.isValid(rootDigest, Account("Bob", 108, "raccoon")) shouldBe true
     bobProof.isValid(rootDigest, Account("Bob", 108, "rhino")) shouldBe false
     bobProof.isValid(rootDigest, Account("Bobby", 108, "raccoon")) shouldBe false
     bobProof.isValid(rootDigest, Account("Bob", 107, "raccoon")) shouldBe false
-    
+
   }
 
   it should "add an account and recompute the tree accordingly" in {
@@ -167,4 +164,35 @@ class ProofSpec extends FlatSpec with Matchers {
 
   }
 
+  it should "serialize to an array using binary heap" in {
+    val users = parse(passingTestMock).extract[Seq[Account]]
+    val tree = Tree(users)
+
+    val array = Tree.toArray(tree)
+    val nodesInArray = array.filter(_.isDefined).size
+    val Some(rootNode) = array(0)
+
+    nodesInArray shouldBe tree.numNodes
+    rootNode.leftValue + rootNode.rightValue shouldBe tree.totalBalance
+    rootNode.id shouldBe tree.rootDigest
+
+    //compare with serialized version to spot breaking changes
+    val jsArrayString = writePretty(array)
+    val storedArray = resourceAsString("mocks/stored_array.json")
+
+    jsArrayString == storedArray shouldBe true
+
+  }
+
+  it should "de-serialize from an array in binary heap encoding" in {
+    val users = parse(accountsTestMock).extract[Seq[Account]]
+    val tree = Tree(users)
+
+    val array = Tree.toArray(tree)
+    val readTree = Tree.fromArray(users, array)
+
+    readTree.numNodes shouldBe tree.numNodes
+    readTree.maxDepth shouldBe tree.maxDepth
+    readTree.totalBalance shouldBe tree.totalBalance
+  }
 }

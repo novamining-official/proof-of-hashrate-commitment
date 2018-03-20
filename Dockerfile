@@ -26,10 +26,10 @@ FROM openjdk:8u121-jdk-alpine
 RUN apk add --no-cache tar bash
 
 WORKDIR /app
-COPY --from=BUILD /usr/src/target/universal/liability_proof-0.0.1.tgz .
-RUN tar -xzf liability_proof-0.0.1.tgz
+COPY --from=BUILD /usr/src/target/universal/proof_of_hashrate_commitment-0.0.1.tgz .
+RUN tar -xzf proof_of_hashrate_commitment-0.0.1.tgz
 
 # passes the host system java options to this image entrypoint
 ENV JAVA_OPTS=
 
-ENTRYPOINT ./liability_proof-0.0.1/bin/liability_proof
+ENTRYPOINT ./proof_of_hashrate_commitment-0.0.1/bin/proof_of_hashrate_commitment

@@ -8,7 +8,8 @@ lazy val root = (project in file(".")).
       scalaVersion    := "2.12.4",
       version         := "0.0.1",
       mainClass in Compile := Some("Boot"),
-      ScalariformKeys.preferences := scalariformPref.value
+      ScalariformKeys.preferences := scalariformPref.value,
+      parallelExecution in Test := false
     )),
     name := "proof_of_hashrate_commitment",
     libraryDependencies ++= Seq(

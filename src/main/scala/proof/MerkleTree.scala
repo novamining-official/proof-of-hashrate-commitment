@@ -90,28 +90,25 @@ object MerkleTree {
     //TODO scramble account ordering?
     def build(chainId: CHAIN_ID = BITCOIN_CHAIN, accounts: Seq[Account]): Tree = Tree(chainId, accounts, mkTree(accounts.sorted))
 
-    def toArray(root: Node, size: Int): Array[Option[Node]] = {
-      //FIXME use tighter size for the array
-      val array = Array.fill[Option[Node]](size)(None)
-      toArrayNode(Some(root), 0, array)
-      array
-    }
-
-    def toArray(tree: Tree): Array[Option[Node]] = toArray(tree.root, math.pow(2, tree.accounts.size).toInt + 1)
-
+    //
     def fromArray(array: Array[Option[Node]]): Option[Node] = fromArrayRec(array, 0)
 
     def fromArray(chainId: CHAIN_ID, accounts: Seq[Account], array: Array[Option[Node]]): Tree = {
       Tree(chainId, accounts, fromArray(array).get)
     }
 
-    private def toArrayNode(node: Option[Node], indexAt: Int, array: Array[Option[Node]]): Unit = node match {
-      case None =>
-      case Some(n) =>
-        // blank out the nested references, we know them via the implicit ordering of the binary heap
-        array(indexAt) = Some(n.copy(leftHash = None, rightHash = None, left = None, right = None))
-        toArrayNode(n.left, indexAt * 2 + 1, array)
-        toArrayNode(n.right, indexAt * 2 + 2, array)
+    def getLeft(array: Array[Option[Node]], currentNodeIndex: Int) = {
+      if (currentNodeIndex * 2 + 1 >= array.size)
+        None
+      else
+        array(currentNodeIndex * 2 + 1)
+    }
+
+    def getRight(array: Array[Option[Node]], currentNodeIndex: Int) = {
+      if (currentNodeIndex * 2 + 2 >= array.size)
+        None
+      else
+        array(currentNodeIndex * 2 + 2)
     }
 
     private def fromArrayRec(array: Array[Option[Node]], indexAt: Int): Option[Node] = {
@@ -120,11 +117,49 @@ object MerkleTree {
         return None
 
       array(indexAt).map { node =>
+        var leftChild = fromArrayRec(array, indexAt * 2 + 1)
+        var rightChild = fromArrayRec(array, indexAt * 2 + 2)
+
         node.copy(
-          left = fromArrayRec(array, indexAt * 2 + 1),
-          right = fromArrayRec(array, indexAt * 2 + 2)
+          leftHash = leftChild.map(_.id),
+          left = leftChild,
+          rightHash = rightChild.map(_.id),
+          right = rightChild
         )
       }
+    }
+
+    def toArray(tree: Tree): Array[Option[Node]] = toArray(tree.root, math.pow(2, tree.accounts.size).toInt + 1)
+
+    def toArray(root: Node, size: Int): Array[Option[Node]] = {
+      val array = Array.fill[Option[Node]](size)(None)
+      toArrayNode(Some(root), 0, array)
+      //TODO trim
+      array
+      // array.take(array.lastIndexOf(Some(Node(_, _, _, _, _, _, _))) + 15)
+    }
+
+    private def toArrayNode(node: Option[Node], indexAt: Int, array: Array[Option[Node]]): Unit = node match {
+      case None =>
+      case Some(n) =>
+        // blank out the nested references, we know them via the implicit ordering of the binary heap
+        array(indexAt) = Some(n.copy(leftHash = None, rightHash = None, left = None, right = None))
+
+        val leftChild = (n.leftHash, n.left) match {
+          case (Some(_), Some(_)) => n.left
+          case (Some(hash), None) => Some(Node(id = hash, leftValue = n.leftValue))
+          case _                  => None
+        }
+
+        val rightChild = (n.rightHash, n.right) match {
+          case (Some(_), Some(_)) => n.right
+          case (Some(hash), None) => Some(Node(id = hash, leftValue = n.rightValue))
+          case _                  => None
+        }
+
+        toArrayNode(leftChild, indexAt * 2 + 1, array)
+        toArrayNode(rightChild, indexAt * 2 + 2, array)
+
     }
 
   }
@@ -153,7 +188,7 @@ object MerkleTree {
     override def toString: String = {
       isLeaf match {
         case true  => s"LEAF [$id  $totalValue]"
-        case false => s"NODE [$id  $totalValue left ${leftHash.map(_.toString)} right: ${rightHash.map(_.toString)}]"
+        case false => s"NODE [$id  $totalValue  \nleft: ${left.map(_.toString)} \nright: ${right.map(_.toString)}]"
       }
     }
   }

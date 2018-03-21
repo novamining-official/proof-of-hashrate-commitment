@@ -1,37 +1,15 @@
-package testexample
-
-import java.nio.file.{ Files, Paths }
+package main
 
 import common.JsonSupport
-import scala.io.Source
 import proof.MerkleTree.{ Account, Tree }
 import proof.MerkleTree._
-import proof.MerkleTree.CHAIN_ID._
 import org.scalatest._
-import org.json4s._
 import org.json4s.jackson.JsonMethods._
-import org.json4s.jackson.Serialization
-import org.json4s.jackson.Serialization._
-import proof.ProofOfHashrate
-
-import scala.util.Random
+import Helpers._
 
 class ProofSpec extends FlatSpec with Matchers with JsonSupport {
 
-  def resourceAsString(fileName: String) = Source.fromURL(getClass.getResource(s"/$fileName")).mkString
-  def writeToFile(data: String, fileName: String) = Files.write(
-    Paths.get(s"src/test/resources/$fileName"),
-    data.getBytes
-  )
-
-  lazy val passingTestMock = resourceAsString("mocks/mock_data.json")
-  lazy val accountsTestMock = resourceAsString("mocks/accounts.json")
-
-  lazy val randomAccounts: Stream[Account] = Account(
-    user = Random.alphanumeric.take(6).mkString,
-    balance = Random.nextInt,
-    nonce = Random.alphanumeric.take(4).mkString
-  ) #:: randomAccounts
+  lazy val users = parse(passingTestMock).extract[Seq[Account]]
 
   /**
    *  The merkle tree is balanced and contain the input data on the leaves,
@@ -53,9 +31,6 @@ class ProofSpec extends FlatSpec with Matchers with JsonSupport {
   }
 
   it should "Construct a tree and a valid proof" in {
-
-    val users = parse(passingTestMock).extract[Seq[Account]]
-
     val tree = Tree.build(accounts = users)
     val rootDigest = tree.rootDigest
 
@@ -73,11 +48,10 @@ class ProofSpec extends FlatSpec with Matchers with JsonSupport {
   }
 
   it should "validate the proof from external mock data account.json" in {
-    val users = parse(accountsTestMock).extract[List[Account]]
-
+    val accounts = parse(accountsTestMock).extract[List[Account]]
     val expectedNumNodes = 33
 
-    val tree = Tree.build(accounts = users)
+    val tree = Tree.build(accounts = accounts)
     val rootDigest = tree.rootDigest
 
     val accountToCheck = Account("mark", 462, "falcon")
@@ -96,13 +70,11 @@ class ProofSpec extends FlatSpec with Matchers with JsonSupport {
   }
 
   it should "not find a proof if the tree does not contain a certain user" in {
-    val users = parse(passingTestMock).extract[Seq[Account]]
     val tree = Tree.build(accounts = users)
     tree.hasProofFor(Account("nope", 12, "cheetah")) shouldBe false
   }
 
   it should "validate a proof correctly (failing) given a wrong root digest" in {
-    val users = parse(passingTestMock).extract[Seq[Account]]
     val tree = Tree.build(accounts = users)
     val Some(proof) = tree.findProofByAccount(Account("Bob", 108, "raccoon"))
 
@@ -114,22 +86,7 @@ class ProofSpec extends FlatSpec with Matchers with JsonSupport {
 
   }
 
-  it should "read a proof from file and check it against the root digest for user Bob" in {
-
-    //digest from mock_data.json
-    val rootDigest = "f61070df851b2fa44eb9f0bc63b69147229796068dd55676265f147d71b25ced"
-    val bobProof = read[ProofOfHashrate.Proof](resourceAsString("mocks/bob_proof.json"))
-
-    bobProof.isValid(rootDigest, Account("Bob", 108, "raccoon")) shouldBe true
-    bobProof.isValid(rootDigest, Account("Bob", 108, "rhino")) shouldBe false
-    bobProof.isValid(rootDigest, Account("Bobby", 108, "raccoon")) shouldBe false
-    bobProof.isValid(rootDigest, Account("Bob", 107, "raccoon")) shouldBe false
-
-  }
-
   it should "add an account and recompute the tree accordingly" in {
-
-    val users = parse(passingTestMock).extract[Seq[Account]]
     val tree = Tree.build(accounts = users)
 
     val accountToAdd = Account("Diana", 223, "panther")
@@ -161,39 +118,10 @@ class ProofSpec extends FlatSpec with Matchers with JsonSupport {
     val seventeen = randomAccounts.take(17).toList
     checkTreeMetrics(Tree.build(accounts = seventeen), seventeen)
 
-    //with a lot of users
+    //with a lot of usersSerializationTest
     val manyUsers = randomAccounts.take(4712).toList
     checkTreeMetrics(Tree.build(accounts = manyUsers), manyUsers)
 
   }
 
-  it should "serialize to an array using binary heap" in {
-    val users = parse(passingTestMock).extract[Seq[Account]]
-    val tree = Tree.build(accounts = users)
-
-    val array = Tree.toArray(tree)
-    val Some(rootNode) = array(0)
-
-    array.filter(_.isDefined).size shouldBe tree.numNodes
-    rootNode.leftValue + rootNode.rightValue shouldBe tree.totalBalance
-    rootNode.id shouldBe tree.rootDigest
-
-    //compare with serialized version to spot breaking changes
-    val jsTree = writePretty(tree)
-    val storedTree = resourceAsString("mocks/stored_array.json")
-
-    jsTree shouldBe storedTree
-
-  }
-
-  it should "de-serialize from an array" in {
-    val users = parse(passingTestMock).extract[Seq[Account]]
-
-    val tree = parse(resourceAsString("mocks/stored_array.json")).extract[Tree]
-    val buildTree = Tree.build(accounts = users)
-
-    buildTree.numNodes shouldBe tree.numNodes
-    buildTree.maxDepth shouldBe tree.maxDepth
-    buildTree.totalBalance shouldBe tree.totalBalance
-  }
 }

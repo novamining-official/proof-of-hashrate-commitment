@@ -38,30 +38,30 @@ object MerkleTree {
     def hasProofFor(account: Account): Boolean = findProofByAccount(account).isDefined
 
     def findProofByAccount(account: Account): Option[Proof] = {
-      mkProofPath(root, account).map(node => Proof(chainId, node))
+      mkProofPath(Some(root), account).map(node => Proof(chainId, node))
     }
 
-    private def mkProofPath(node: Node, account: Account): Option[Node] = {
-      if (node.isLeaf && node.id == Node.mkLeafId(account)) {
-        return Some(node.copy())
-      }
+    private def mkProofPath(n: Option[Node], account: Account): Option[Node] = n match {
+      case None => None
+      case Some(node) =>
+        if (node.isLeaf && node.id == Node.mkLeafId(account)) {
+          return Some(node.copy())
+        }
 
-      if (!node.isLeaf) {
-        val leftBranch = mkProofPath(node.left.get, account)
+        if (!node.isLeaf) {
+          val leftBranch = mkProofPath(node.left, account)
 
-        if (leftBranch.isDefined)
-          return Some(node.copy(left = leftBranch, right = node.right.map { r =>
-            Node(r.id)
-          }))
+          if (leftBranch.isDefined)
+            return Some(node.copy(left = leftBranch, right = node.right.map(r => Node(r.id))))
 
-        val rightBranch = mkProofPath(node.right.get, account)
+          val rightBranch = mkProofPath(node.right, account)
 
-        if (rightBranch.isDefined)
-          return Some(node.copy(left = node.left.map { l => Node(l.id) }, right = rightBranch))
+          if (rightBranch.isDefined)
+            return Some(node.copy(left = node.left.map(l => Node(l.id)), right = rightBranch))
 
-      }
+        }
 
-      None
+        None
     }
 
     def numNodes: Int = nodesCountNode(root)
@@ -96,7 +96,10 @@ object MerkleTree {
     def fromArray(array: Array[Option[Node]]): Option[Node] = fromArrayRec(array, 0)
 
     def fromArray(chainId: CHAIN_ID, accounts: Seq[Account], array: Array[Option[Node]]): Tree = {
-      Tree(chainId, accounts, fromArray(array).get)
+      fromArray(array) match {
+        case Some(root) => Tree(chainId, accounts, root)
+        case None => throw new IllegalArgumentException(s"Unable to make tree from array")
+      }
     }
 
     def getLeft(array: Array[Option[Node]], currentNodeIndex: Int) = {

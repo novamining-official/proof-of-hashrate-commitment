@@ -36,6 +36,7 @@ class SerializationSpec extends FlatSpec with Matchers with JsonSupport {
     tree.maxDepth shouldBe deserializedTree.maxDepth
     tree.totalBalance shouldBe deserializedTree.totalBalance
 
+    //trees internal structure should be the same
     tree.root.toString shouldBe deserializedTree.root.toString
   }
 
@@ -63,21 +64,21 @@ class SerializationSpec extends FlatSpec with Matchers with JsonSupport {
   it should "de-serialize a proof from file and check it against the root digest for user Alice" in {
     val tree = Tree.build(accounts = usersSerializationTest)
 
-    val Some(proof) = tree.findProofByAccount(Account("Alice", 38, "rhino"))
-    writeToFile(writePretty(proof), "mocks/alice_proof.json")
+    val Some(aliceProof) = tree.findProofByAccount(Account("Alice", 38, "rhino"))
+    writeToFile(writePretty(aliceProof), "mocks/alice_proof.json")
 
     //digest from mock_data.json
     val rootDigest = "f61070df851b2fa44eb9f0bc63b69147229796068dd55676265f147d71b25ced"
-    val bobProof = read[Proof](resourceAsString("mocks/alice_proof.json"))
+    val deserializedAliceProof = read[Proof](resourceAsString("mocks/alice_proof.json"))
 
-    writePretty(bobProof) shouldBe writePretty(proof)
-    proof.root.toString shouldBe bobProof.root.toString
+    writePretty(deserializedAliceProof) shouldBe writePretty(aliceProof)
+    aliceProof.root.toString shouldBe deserializedAliceProof.root.toString
 
-    proof.isValid(rootDigest, Account("Alice", 38, "rhino")) shouldBe true
-    bobProof.isValid(rootDigest, Account("Alice", 38, "rhino")) shouldBe true
-    bobProof.isValid(rootDigest, Account("Bob", 108, "rhino")) shouldBe false
-    bobProof.isValid(rootDigest, Account("Bobby", 108, "raccoon")) shouldBe false
-    bobProof.isValid(rootDigest, Account("Bob", 107, "raccoon")) shouldBe false
+    aliceProof.isValid(rootDigest, Account("Alice", 38, "rhino")) shouldBe true
+    deserializedAliceProof.isValid(rootDigest, Account("Alice", 38, "rhino")) shouldBe true
+    deserializedAliceProof.isValid(rootDigest, Account("Bob", 108, "rhino")) shouldBe false
+    deserializedAliceProof.isValid(rootDigest, Account("Bobby", 108, "raccoon")) shouldBe false
+    deserializedAliceProof.isValid(rootDigest, Account("Bob", 107, "raccoon")) shouldBe false
 
   }
 

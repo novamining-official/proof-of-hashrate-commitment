@@ -41,7 +41,7 @@ class ProofSpec extends FlatSpec with Matchers with JsonSupport {
     tree.maxDepth shouldBe 4
     tree.totalBalance shouldBe 387
 
-    val existingAccount = Account("Alice", 38, "rhino")
+    val existingAccount = Account("Satoshi", 21, "turtle")
     val nonExistingAccount = Account("Mallory", 31, "cat")
     val Some(proof) = tree.findProofByAccount(existingAccount)
 

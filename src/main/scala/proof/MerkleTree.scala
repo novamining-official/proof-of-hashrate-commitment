@@ -131,14 +131,19 @@ object MerkleTree {
       }
     }
 
-    def toArray(tree: Tree): Array[Option[Node]] = toArray(tree.root, math.pow(2, tree.accounts.size).toInt + 1)
+    def toArray(tree: Tree): Array[Option[Node]] = {
+      toArray(tree.root)
+    }
 
-    def toArray(root: Node, size: Int): Array[Option[Node]] = {
+    def toArray(root: Node): Array[Option[Node]] = {
+      //create dummy tree to compute the max depth from its root node
+      val treeMaxDepth = Tree(BITCOIN_CHAIN, Seq.empty, root).maxDepth
+      //the index of the last node at level N is
+      //last(N) = 2^(N+1) - 2
+      val size = math.pow(2, treeMaxDepth + 1).toInt - 2
       val array = Array.fill[Option[Node]](size)(None)
       toArrayNode(Some(root), 0, array)
-      //TODO trim
       array
-      // array.take(array.lastIndexOf(Some(Node(_, _, _, _, _, _, _))) + 15)
     }
 
     private def toArrayNode(node: Option[Node], indexAt: Int, array: Array[Option[Node]]): Unit = node match {
@@ -193,6 +198,7 @@ object MerkleTree {
         case false => s"NODE [$id  $totalValue  leftHash:$leftHash rightHash:$rightHash \nleft: ${left.map(_.toString)} \nright: ${right.map(_.toString)}]"
       }
     }
+
   }
 
   object Node {

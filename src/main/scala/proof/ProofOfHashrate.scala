@@ -9,7 +9,7 @@ object ProofOfHashrate extends LazyLogging {
   case class Proof(chainId: CHAIN_ID.Value, root: Node) {
 
     def isValid(rootDigest: String, account: Account): Boolean = {
-      rootDigest == root.id && checkSubtreeProofDeep(root, account, 0)._2
+      rootDigest == root.id && checkSubtreeProof(root, account, 0)._2
     }
 
   }
@@ -18,23 +18,8 @@ object ProofOfHashrate extends LazyLogging {
     !node.isLeaf && node.id == Node.mkIdHash(node.leftHash.get, node.rightHash.get, node.totalValue)
   }
 
-  //FIXME check only the leaves at the deepest level
-  private def checkSubtreeProof(node: Node, account: Account): Boolean = {
-
-    if (node.isLeaf)
-      return node.id == Node.mkLeafId(account)
-
-    if (node.right.isDefined)
-      return checkNodeId(node) && checkSubtreeProof(node.right.get, account)
-
-    if (node.left.isDefined)
-      return checkNodeId(node) && checkSubtreeProof(node.left.get, account)
-
-    false
-  }
-
-  //
-  private def checkSubtreeProofDeep(node: Node, account: Account, level: Int): (Int, Boolean) = {
+  //Check if the given account matches any leaf at the deepest level
+  private def checkSubtreeProof(node: Node, account: Account, level: Int): (Int, Boolean) = {
 
     if (node.isLeaf)
       return (level, node.id == Node.mkLeafId(account))
@@ -43,11 +28,11 @@ object ProofOfHashrate extends LazyLogging {
       return (level, false)
 
     val leftMaxTruth: Option[(Int, Boolean)] = node.left.map { leftNode =>
-      checkSubtreeProofDeep(leftNode, account, level + 1)
+      checkSubtreeProof(leftNode, account, level + 1)
     }
 
     val rightMaxTruth: Option[(Int, Boolean)] = node.right.map { rightNode =>
-      checkSubtreeProofDeep(rightNode, account, level + 1)
+      checkSubtreeProof(rightNode, account, level + 1)
     }
 
     (leftMaxTruth, rightMaxTruth) match {
@@ -63,8 +48,6 @@ object ProofOfHashrate extends LazyLogging {
         (level, false)
     }
 
-    //
-    //    (level, false)
   }
 
 }

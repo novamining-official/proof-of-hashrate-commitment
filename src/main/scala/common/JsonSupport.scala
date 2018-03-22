@@ -45,7 +45,7 @@ trait JsonSupport extends LazyLogging {
     },
     {
       case root: Node =>
-        val nodesArray = Tree.toArray(root, 1024).map {
+        val nodesArray = Tree.toArray(root).map {
           case None => JNull
           case Some(node) => JObject(
             JField("id", JString(node.id)),

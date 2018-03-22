@@ -3,9 +3,12 @@ package main
 import common.JsonSupport
 import proof.MerkleTree.{ Account, Tree }
 import proof.MerkleTree._
+import org.json4s.jackson.JsonMethods.parse
+import org.json4s.jackson.Serialization._
 import org.scalatest._
 import org.json4s.jackson.JsonMethods._
 import Helpers._
+import proof.ProofOfHashrate.Proof
 
 class ProofSpec extends FlatSpec with Matchers with JsonSupport {
 
@@ -30,7 +33,7 @@ class ProofSpec extends FlatSpec with Matchers with JsonSupport {
 
   }
 
-  it should "Construct a tree and a valid proof" in {
+  it should "construct a tree and a valid proof" in {
     val tree = Tree.build(accounts = users)
     val rootDigest = tree.rootDigest
 

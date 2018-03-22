@@ -50,12 +50,14 @@ object MerkleTree {
         val leftBranch = mkProofPath(node.left.get, account)
 
         if (leftBranch.isDefined)
-          return Some(node.copy(left = leftBranch, right = None))
+          return Some(node.copy(left = leftBranch, right = node.right.map { r =>
+            Node(r.id)
+          }))
 
         val rightBranch = mkProofPath(node.right.get, account)
 
         if (rightBranch.isDefined)
-          return Some(node.copy(left = None, right = rightBranch))
+          return Some(node.copy(left = node.left.map { l => Node(l.id) }, right = rightBranch))
 
       }
 
@@ -188,7 +190,7 @@ object MerkleTree {
     override def toString: String = {
       isLeaf match {
         case true  => s"LEAF [$id  $totalValue]"
-        case false => s"NODE [$id  $totalValue  \nleft: ${left.map(_.toString)} \nright: ${right.map(_.toString)}]"
+        case false => s"NODE [$id  $totalValue  leftHash:$leftHash rightHash:$rightHash \nleft: ${left.map(_.toString)} \nright: ${right.map(_.toString)}]"
       }
     }
   }

@@ -45,7 +45,6 @@ trait JsonSupport extends LazyLogging {
     },
     {
       case root: Node =>
-        //FIXME we must preserve the indexes and keep None(s) in place
         val nodesArray = Tree.toArray(root, 1024).map {
           case None => JNull
           case Some(node) => JObject(

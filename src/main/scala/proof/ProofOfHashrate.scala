@@ -9,7 +9,6 @@ object ProofOfHashrate extends LazyLogging {
   case class Proof(chainId: CHAIN_ID.Value, root: Node) {
 
     def isValid(rootDigest: String, account: Account): Boolean = {
-      logger.info(s"Checking..")
       rootDigest == root.id && checkSubtreeProofDeep(root, account, 0)._2
     }
 
@@ -19,7 +18,6 @@ object ProofOfHashrate extends LazyLogging {
     !node.isLeaf && node.id == Node.mkIdHash(node.leftHash.get, node.rightHash.get, node.totalValue)
   }
 
-  //TODO check for non decreasing node values ?
   //FIXME check only the leaves at the deepest level
   private def checkSubtreeProof(node: Node, account: Account): Boolean = {
 
@@ -54,7 +52,9 @@ object ProofOfHashrate extends LazyLogging {
 
     (leftMaxTruth, rightMaxTruth) match {
       case (Some((leftLevel, leftFound)), Some((rightLevel, rightFound))) =>
-        if (leftLevel > rightLevel)
+        if (leftLevel == rightLevel)
+          (leftLevel, leftFound || rightFound)
+        else if (leftLevel > rightLevel)
           (leftLevel, leftFound)
         else
           (rightLevel, rightFound)

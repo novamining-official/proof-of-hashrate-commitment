@@ -3,7 +3,6 @@ package main
 import common.JsonSupport
 import proof.MerkleTree.{ Account, Tree }
 import proof.MerkleTree._
-import org.json4s.jackson.JsonMethods.parse
 import org.json4s.jackson.Serialization._
 import org.scalatest._
 import org.json4s.jackson.JsonMethods._

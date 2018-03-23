@@ -98,7 +98,7 @@ object MerkleTree {
     def fromArray(chainId: CHAIN_ID, accounts: Seq[Account], array: Array[Option[Node]]): Tree = {
       fromArray(array) match {
         case Some(root) => Tree(chainId, accounts, root)
-        case None => throw new IllegalArgumentException(s"Unable to make tree from array")
+        case None       => throw new IllegalArgumentException(s"Unable to make tree from array")
       }
     }
 

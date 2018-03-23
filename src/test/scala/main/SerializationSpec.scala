@@ -42,9 +42,7 @@ class SerializationSpec extends FlatSpec with Matchers with JsonSupport {
 
   it should "de-serialize a proof from file and check it against the root digest for user Bob" in {
     val tree = Tree.build(accounts = usersSerializationTest)
-
     val Some(proof) = tree.findProofByAccount(Account("Bob", 108, "raccoon"))
-    writeToFile(writePretty(proof), "mocks/bob_proof.json")
 
     //digest from mock_data.json
     val rootDigest = "f61070df851b2fa44eb9f0bc63b69147229796068dd55676265f147d71b25ced"
@@ -63,9 +61,7 @@ class SerializationSpec extends FlatSpec with Matchers with JsonSupport {
 
   it should "de-serialize a proof from file and check it against the root digest for user Alice" in {
     val tree = Tree.build(accounts = usersSerializationTest)
-
     val Some(aliceProof) = tree.findProofByAccount(Account("Alice", 38, "rhino"))
-    writeToFile(writePretty(aliceProof), "mocks/alice_proof.json")
 
     //digest from mock_data.json
     val rootDigest = "f61070df851b2fa44eb9f0bc63b69147229796068dd55676265f147d71b25ced"

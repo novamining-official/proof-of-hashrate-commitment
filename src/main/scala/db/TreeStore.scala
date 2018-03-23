@@ -1,7 +1,6 @@
 package db
 
 import java.nio.file.{ Files, Paths }
-
 import com.typesafe.scalalogging.LazyLogging
 import common.JsonSupport
 import proof.MerkleTree.{ CHAIN_ID, Tree }
@@ -42,7 +41,7 @@ object TreeStore extends JsonSupport with LazyLogging {
     if (Files.notExists(filePath))
       return None
 
-    val jsTree = Files.readAllLines(filePath).asScala.foldLeft("")(_ + _)
+    val jsTree = Files.readAllLines(filePath).asScala.reduce(_ + _)
 
     parseOpt(jsTree).map(_.extractOpt[Tree]).flatten
   }

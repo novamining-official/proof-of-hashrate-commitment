@@ -7,16 +7,14 @@ import db.TreeStore
 import main.Helpers._
 import scala.collection.JavaConverters._
 import org.json4s.jackson.JsonMethods.parse
-import org.scalatest.{BeforeAndAfter, FlatSpec, Matchers}
-import proof.MerkleTree.{Account, Tree}
+import org.scalatest.{ BeforeAndAfter, FlatSpec, Matchers }
+import proof.MerkleTree.{ Account, Tree }
 import proof.MerkleTree.CHAIN_ID._
-
 
 //TODO use config to make the test db point to test directory
 class StoreSpec extends FlatSpec with Matchers with JsonSupport with BeforeAndAfter {
 
   lazy val mockAccounts = parse(accountsTestMock).extract[Seq[Account]]
-
 
   //Clean the test store dir every time we're about to run the test
   before {
@@ -24,7 +22,6 @@ class StoreSpec extends FlatSpec with Matchers with JsonSupport with BeforeAndAf
       Files.deleteIfExists(file)
     }
   }
-
 
   it should "save the tree to a file" in {
     val tree = Tree.build(accounts = mockAccounts)

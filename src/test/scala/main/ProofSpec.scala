@@ -120,7 +120,7 @@ class ProofSpec extends FlatSpec with Matchers with JsonSupport {
     val seventeen = randomAccounts.take(17).toList
     checkTreeMetrics(Tree.build(accounts = seventeen), seventeen)
 
-    //with a lot of usersSerializationTest
+    //with a lot of mockAccounts
     val manyUsers = randomAccounts.take(4712).toList
     checkTreeMetrics(Tree.build(accounts = manyUsers), manyUsers)
 

@@ -1,22 +1,41 @@
 package main
 
+import java.nio.file.Files
+
 import common.JsonSupport
 import db.TreeStore
-import main.Helpers.passingTestMock
+import main.Helpers._
+import scala.collection.JavaConverters._
 import org.json4s.jackson.JsonMethods.parse
-import org.scalatest.{ FlatSpec, Matchers }
-import proof.MerkleTree.{ Account, Tree }
+import org.scalatest.{BeforeAndAfter, FlatSpec, Matchers}
+import proof.MerkleTree.{Account, Tree}
 import proof.MerkleTree.CHAIN_ID._
 
-class StoreSpec extends FlatSpec with Matchers with JsonSupport {
 
-  lazy val usersSerializationTest = parse(passingTestMock).extract[Seq[Account]]
+//TODO use config to make the test db point to test directory
+class StoreSpec extends FlatSpec with Matchers with JsonSupport with BeforeAndAfter {
+
+  lazy val mockAccounts = parse(accountsTestMock).extract[Seq[Account]]
+
+
+  //Clean the test store dir every time we're about to run the test
+  before {
+    Files.list(TreeStore.storeDir).iterator.asScala.map { file =>
+      Files.deleteIfExists(file)
+    }
+  }
+
 
   it should "save the tree to a file" in {
-    val tree = Tree.build(accounts = usersSerializationTest)
+    val tree = Tree.build(accounts = mockAccounts)
     TreeStore.saveTree(tree)
 
-    1 shouldBe 1
+    val optPath = Files
+      .list(TreeStore.storeDir)
+      .iterator.asScala
+      .find(_.getFileName.toString.contains(tree.rootDigest.take(8)))
+
+    optPath.isDefined shouldBe true
 
   }
 

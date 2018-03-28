@@ -13,9 +13,15 @@ lazy val root = (project in file(".")).
     )),
     name := "proof_of_hashrate_commitment",
     libraryDependencies ++= Seq(
+      //AKKA
+      "com.typesafe.akka" %% "akka-slf4j" % "2.5.11",
+      "com.typesafe.akka" %% "akka-http" % "10.1.0",
+      "com.typesafe.akka" %% "akka-http-testkit" % "10.1.0"% "test",
+
       //JSON
       "org.json4s" %% "json4s-native" % "3.5.3",
       "org.json4s" %% "json4s-jackson" % "3.5.3",
+      "de.heikoseeberger" %% "akka-http-json4s" % "1.+",
 
       //TEST FRAMEWORK
       "org.scalatest" %% "scalatest" % "3.0.4" % "test",

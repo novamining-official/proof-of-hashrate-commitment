@@ -1,7 +1,7 @@
 package db
 
 import java.nio.file.{ Files, Path, Paths }
-
+import common.Config._
 import com.typesafe.scalalogging.LazyLogging
 import common.JsonSupport
 import proof.MerkleTree.{ CHAIN_ID, Tree }
@@ -11,10 +11,8 @@ import scala.collection.JavaConverters._
 
 object TreeStore extends JsonSupport with LazyLogging {
 
-  //  val config = com.typesafe.config.ConfigFactory.load()
-
   private lazy val inMemoryTreeStore: Seq[Tree] = new scala.collection.mutable.MutableList[Tree]
-  lazy val storeDir = Paths.get("db/")
+  lazy val storeDir = Paths.get(dbDirectory)
   logger.info(s"DB directory: ${storeDir.toAbsolutePath}")
 
   //check if dir exists

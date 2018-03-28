@@ -6,7 +6,7 @@ import proof.MerkleTree.Account
 
 trait TreeApi extends JsonSupport with Directives {
 
-  val treeApiRoute = get {
+  def treeRoute = get {
     path("tree") {
       complete(Account("Bob", 14, "cat"))
     }

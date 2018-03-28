@@ -11,7 +11,9 @@ import scala.collection.JavaConverters._
 
 object TreeStore extends JsonSupport with LazyLogging {
 
-  private lazy val inMemoryTreeStore: Seq[Tree] = new scala.collection.mutable.MutableList[Tree]
+  //this needs to be thread safe, got to use a Set backed by synchronized hash map
+  private lazy val inMemoryTreeStore = new scala.collection.mutable.MutableList[Tree]
+
   lazy val storeDir = Paths.get(dbDirectory)
   logger.info(s"DB directory: ${storeDir.toAbsolutePath}")
 
@@ -20,9 +22,6 @@ object TreeStore extends JsonSupport with LazyLogging {
     logger.info(s"DB directory not found, creating one")
     Files.createDirectory(storeDir)
   }
-
-  //load trees from disk
-  setup()
 
   private def treeToFileName(tree: Tree): String = treeToFileName(tree.chainId, tree.rootDigest)
   private def treeToFileName(chainId: CHAIN_ID.Value, rootDigest: String): String = s"${chainId}_${rootDigest.take(8)}.json"
@@ -52,17 +51,21 @@ object TreeStore extends JsonSupport with LazyLogging {
     loadTree(Paths.get(storeDir.toString, treeToFileName(chainId, rootDigest)))
   }
 
-  private def setup() = for {
-    file <- Files.list(storeDir).iterator.asScala
+  def setup() = for {
+    file <- Files.list(storeDir).iterator.asScala.toList
     tree <- loadTree(file)
   } yield {
-    logger.info(s"Loaded: ${file.getFileName.toString}")
-    inMemoryTreeStore :+ tree
+    logger.info(s"Found: ${file.getFileName.toString}")
+    inMemoryTreeStore += tree
   }
 
   //Interface method to retrieve the trees from the store
   def findTree(chainId: CHAIN_ID.Value, digest: String) = {
     inMemoryTreeStore.find(t => t.rootDigest == digest && t.chainId == chainId)
+  }
+
+  def allTrees(): Seq[Tree] = {
+    inMemoryTreeStore.clone().iterator.toSeq
   }
 
 }

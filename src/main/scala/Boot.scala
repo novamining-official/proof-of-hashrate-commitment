@@ -5,12 +5,16 @@ import akka.stream.ActorMaterializer
 import api.{ ProofApi, TreeApi }
 import com.typesafe.scalalogging.LazyLogging
 import common.Config._
+import db.TreeStore
 
 object Boot extends App with LazyLogging {
 
   implicit val actorSystem = ActorSystem()
   implicit val materializer = ActorMaterializer()
   implicit val executionContext = actorSystem.dispatcher
+
+  TreeStore.setup()
+  logger.info(s"Done loading db")
 
   val routeContainer = new {} with TreeApi with ProofApi {
     val route = treeRoute ~ proofRoute

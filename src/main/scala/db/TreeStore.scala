@@ -1,12 +1,15 @@
 package db
 
-import java.nio.file.{ Files, Path, Paths }
+import java.nio.file.{Files, Path, Paths}
+
 import common.Config._
 import com.typesafe.scalalogging.LazyLogging
 import common.JsonSupport
-import proof.MerkleTree.{ CHAIN_ID, Tree }
+import proof.MerkleTree.Tree
 import org.json4s.jackson.Serialization._
 import org.json4s.jackson.JsonMethods._
+import proof.domain.CHAIN_ID
+
 import scala.collection.JavaConverters._
 
 object TreeStore extends JsonSupport with LazyLogging {

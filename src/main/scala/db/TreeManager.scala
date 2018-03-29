@@ -1,8 +1,10 @@
 package db
 
-import proof.MerkleTree.{ Account, CHAIN_ID, Tree }
-import proof.MerkleTree.CHAIN_ID.CHAIN_ID
+import proof.MerkleTree.Tree
 import proof.ProofOfHashrate.Proof
+import proof.domain.{Account, CHAIN_ID}
+import proof.domain.CHAIN_ID._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -23,7 +25,7 @@ object TreeManager {
   }
 
   def checkProof(digest: String, proof: Proof, account: Account): Boolean = {
-    proof.isValid("", account)
+    proof.isValid(digest, account)
   }
 
 }

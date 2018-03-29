@@ -1,8 +1,8 @@
 package main
 
-import java.nio.file.{ Files, Paths }
+import java.nio.file.{Files, Paths}
 
-import proof.MerkleTree.Account
+import proof.domain.Account
 
 import scala.io.Source
 import scala.util.Random

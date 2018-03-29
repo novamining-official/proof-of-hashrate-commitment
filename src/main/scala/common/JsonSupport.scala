@@ -2,10 +2,11 @@ package common
 
 import com.typesafe.scalalogging.LazyLogging
 import de.heikoseeberger.akkahttpjson4s.Json4sSupport
-import org.json4s.JsonAST.{ JArray, JNull, JObject }
-import org.json4s.{ CustomSerializer, JDouble, JField, JString, NoTypeHints, _ }
-import proof.MerkleTree.{ Account, CHAIN_ID, Node, Tree }
+import org.json4s.JsonAST.{JArray, JNull, JObject}
+import org.json4s.{CustomSerializer, JDouble, JField, JString, NoTypeHints, _}
+import proof.MerkleTree.{Node, Tree}
 import org.json4s.jackson.Serialization
+import proof.domain._
 
 trait JsonSupport extends Json4sSupport with LazyLogging {
 

@@ -27,7 +27,7 @@ object TreeStore extends JsonSupport with LazyLogging {
   private def treeToFileName(chainId: CHAIN_ID.Value, rootDigest: String): String = s"${chainId}_${rootDigest.take(8)}.json"
 
   //Should always be invoked after creating a new tree
-  def saveTree(tree: Tree) = {
+  private def saveTree(tree: Tree) = {
     val filePath = Paths.get(storeDir.toString, treeToFileName(tree))
     val jsTree = write(tree)
 
@@ -38,7 +38,7 @@ object TreeStore extends JsonSupport with LazyLogging {
   }
 
   //Automatically called by this class at startup
-  def loadTree(filePath: Path): Option[Tree] = {
+  private def loadTree(filePath: Path): Option[Tree] = {
     if (Files.notExists(filePath))
       return None
 
@@ -47,9 +47,14 @@ object TreeStore extends JsonSupport with LazyLogging {
     parseOpt(jsTree).map(_.extractOpt[Tree]).flatten
   }
 
-  def loadTree(chainId: CHAIN_ID.Value, rootDigest: String): Option[Tree] = {
+  private def loadTree(chainId: CHAIN_ID.Value, rootDigest: String): Option[Tree] = {
     loadTree(Paths.get(storeDir.toString, treeToFileName(chainId, rootDigest)))
   }
+
+  /**
+   * *  Interface methods
+   * *
+   */
 
   def setup() = for {
     file <- Files.list(storeDir).iterator.asScala.toList
@@ -60,11 +65,16 @@ object TreeStore extends JsonSupport with LazyLogging {
   }
 
   //Interface method to retrieve the trees from the store
-  def findTree(chainId: CHAIN_ID.Value, digest: String) = {
+  private[db] def findTree(chainId: CHAIN_ID.Value, digest: String) = {
     inMemoryTreeStore.find(t => t.rootDigest == digest && t.chainId == chainId)
   }
 
-  def allTrees(): Seq[Tree] = {
+  private[db] def addTree(tree: Tree) = {
+    inMemoryTreeStore += tree
+    saveTree(tree)
+  }
+
+  private[db] def allTrees(): Seq[Tree] = {
     inMemoryTreeStore.clone().iterator.toSeq
   }
 

@@ -25,7 +25,7 @@ class StoreSpec extends FlatSpec with Matchers with JsonSupport with BeforeAndAf
 
   it should "save the tree to a file" in {
     val tree = Tree.build(accounts = mockAccounts)
-    TreeStore.saveTree(tree)
+    TreeStore.addTree(tree)
 
     val optPath = Files
       .list(TreeStore.storeDir)
@@ -38,7 +38,7 @@ class StoreSpec extends FlatSpec with Matchers with JsonSupport with BeforeAndAf
 
   it should "load the tree from a file" in {
 
-    val optTree = TreeStore.loadTree(BITCOIN_CHAIN, "f61070df851b2fa44eb9f0bc63b69147229796068dd55676265f147d71b25ced")
+    val optTree = TreeStore.findTree(BITCOIN_CHAIN, "f61070df851b2fa44eb9f0bc63b69147229796068dd55676265f147d71b25ced")
 
     optTree.isDefined shouldBe true
 

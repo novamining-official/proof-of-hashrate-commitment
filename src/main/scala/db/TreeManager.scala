@@ -1,9 +1,8 @@
 package db
 
-import proof.MerkleTree.{Account, CHAIN_ID, Tree}
+import proof.MerkleTree.{ Account, CHAIN_ID, Tree }
 import proof.MerkleTree.CHAIN_ID.CHAIN_ID
 import proof.ProofOfHashrate.Proof
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 

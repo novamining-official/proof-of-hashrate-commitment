@@ -38,7 +38,7 @@ trait JsonSupport extends Json4sSupport with LazyLogging {
           }
         }
 
-        Tree.fromArray(nodes.toArray[Option[Node]]) match {
+        Tree.fromArray(nodes) match {
           case Some(tree) => tree
           case None       => throw new IllegalArgumentException(s"Unable to parse Tree from ${(JArray(jObjectsList)).toString}")
         }

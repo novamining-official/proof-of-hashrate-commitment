@@ -10,9 +10,13 @@ import proof.MerkleTree.Account
 trait ProofApi extends JsonSupport with Directives with LazyLogging {
 
   def proofRoute = post {
-    path("proof" / Segment) { rootDigest =>
+    pathPrefix("proof" / Segment) { rootDigest =>
       entity(as[Account]) { account =>
-        complete(TreeManager.findProof(BITCOIN_CHAIN, rootDigest, account))
+        pathEnd {
+          complete(TreeManager.findProof(BITCOIN_CHAIN, rootDigest, account))
+        } ~ path("verify") {
+          complete("")
+        }
       }
     }
   }

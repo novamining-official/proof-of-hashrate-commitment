@@ -93,37 +93,30 @@ object MerkleTree {
     def build(chainId: CHAIN_ID = BITCOIN_CHAIN, accounts: Seq[Account]): Tree = Tree(chainId, accounts, mkTree(accounts.sorted))
 
     //
-    def fromArray(array: Array[Option[Node]]): Option[Node] = fromArrayRec(array, 0)
+    def fromArray(array: Seq[Option[Node]]): Option[Node] = fromArrayRec(array, 0)
 
-    def fromArray(chainId: CHAIN_ID, accounts: Seq[Account], array: Array[Option[Node]]): Tree = {
-      fromArray(array) match {
-        case Some(root) => Tree(chainId, accounts, root)
-        case None       => throw new IllegalArgumentException(s"Unable to make tree from array")
-      }
-    }
-
-    def getLeft(array: Array[Option[Node]], currentNodeIndex: Int) = {
+    def getLeft(array: Seq[Option[Node]], currentNodeIndex: Int) = {
       if (currentNodeIndex * 2 + 1 >= array.size)
         None
       else
         array(currentNodeIndex * 2 + 1)
     }
 
-    def getRight(array: Array[Option[Node]], currentNodeIndex: Int) = {
+    def getRight(array: Seq[Option[Node]], currentNodeIndex: Int) = {
       if (currentNodeIndex * 2 + 2 >= array.size)
         None
       else
         array(currentNodeIndex * 2 + 2)
     }
 
-    private def fromArrayRec(array: Array[Option[Node]], indexAt: Int): Option[Node] = {
+    private def fromArrayRec(array: Seq[Option[Node]], indexAt: Int): Option[Node] = {
 
       if (indexAt < 0 || indexAt >= array.size)
         return None
 
       array(indexAt).map { node =>
-        var leftChild = fromArrayRec(array, indexAt * 2 + 1)
-        var rightChild = fromArrayRec(array, indexAt * 2 + 2)
+        val leftChild = fromArrayRec(array, indexAt * 2 + 1)
+        val rightChild = fromArrayRec(array, indexAt * 2 + 2)
 
         node.copy(
           leftHash = leftChild.map(_.id),

@@ -1,8 +1,15 @@
 package proof
 
+import proof.ProofOfHashrate.Proof
+
 import scala.math.Ordered
 
 package object domain {
+
+  case class ProofAccountCheck(
+    proof: Proof,
+    account: Account
+  )
 
   case class Account(
     user: String,

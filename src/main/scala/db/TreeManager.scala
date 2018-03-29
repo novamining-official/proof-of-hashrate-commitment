@@ -2,7 +2,7 @@ package db
 
 import proof.MerkleTree.Tree
 import proof.ProofOfHashrate.Proof
-import proof.domain.{Account, CHAIN_ID}
+import proof.domain.{ Account, CHAIN_ID }
 import proof.domain.CHAIN_ID._
 
 import scala.concurrent.ExecutionContext.Implicits.global

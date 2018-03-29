@@ -1,6 +1,6 @@
 package db
 
-import java.nio.file.{Files, Path, Paths}
+import java.nio.file.{ Files, Path, Paths }
 
 import common.Config._
 import com.typesafe.scalalogging.LazyLogging

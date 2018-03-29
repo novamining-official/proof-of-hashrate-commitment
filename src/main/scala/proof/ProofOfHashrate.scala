@@ -2,7 +2,7 @@ package proof
 
 import com.typesafe.scalalogging.LazyLogging
 import proof.MerkleTree._
-import proof.domain.{Account, CHAIN_ID}
+import proof.domain.{ Account, CHAIN_ID }
 
 object ProofOfHashrate extends LazyLogging {
 

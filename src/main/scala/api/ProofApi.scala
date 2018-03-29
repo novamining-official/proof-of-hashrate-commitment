@@ -15,7 +15,9 @@ trait ProofApi extends JsonSupport with Directives with LazyLogging {
           pathEnd {
             complete(TreeManager.findProof(CHAIN_ID.withName(chainId), rootDigest, account))
           } ~ path("verify") {
-            complete("")
+            entity(as[ProofAccountCheck]) { accCheck =>
+              complete(s"${TreeManager.checkProof(rootDigest, accCheck.proof, accCheck.account)}")
+            }
           }
         }
       }

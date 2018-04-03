@@ -3,11 +3,11 @@ package main
 import java.nio.file.Files
 
 import common.JsonSupport
-import db.{TreeManager, TreeStore}
+import db.{ TreeManager, TreeStore }
 import main.Helpers._
 import scala.collection.JavaConverters._
 import org.json4s.jackson.JsonMethods.parse
-import org.scalatest.{BeforeAndAfter, FlatSpec, Matchers}
+import org.scalatest.{ BeforeAndAfter, FlatSpec, Matchers }
 import proof.MerkleTree.Tree
 import proof.domain.Account
 import proof.domain.CHAIN_ID._

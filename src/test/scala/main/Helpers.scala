@@ -1,6 +1,6 @@
 package main
 
-import java.nio.file.{Files, Paths}
+import java.nio.file.{ Files, Paths }
 
 import proof.domain.Account
 

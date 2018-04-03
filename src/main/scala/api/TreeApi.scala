@@ -17,8 +17,6 @@ trait TreeApi extends JsonSupport with Directives {
           } ~ path("accounts") {
             complete(TreeManager.findTree(CHAIN_ID.withName(chainId), rootDigest).map(_.accounts))
           }
-        } ~ path("allDigests") {
-          complete(TreeManager.allTreesDigest())
         }
       } ~ put {
         pathEnd {
@@ -26,6 +24,10 @@ trait TreeApi extends JsonSupport with Directives {
             complete(TreeManager.createAndSaveTree(CHAIN_ID.withName(chainId), accounts))
           }
         }
+      }
+    } ~ get {
+      path("allDigest") {
+        complete(TreeManager.allTreesDigest())
       }
     }
   }

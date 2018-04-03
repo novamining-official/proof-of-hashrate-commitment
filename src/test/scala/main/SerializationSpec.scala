@@ -1,10 +1,10 @@
 package main
 
 import common.JsonSupport
-import main.Helpers.{writeToFile, _}
+import main.Helpers.{ writeToFile, _ }
 import org.json4s.jackson.JsonMethods.parse
 import org.json4s.jackson.Serialization._
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.{ FlatSpec, Matchers }
 import proof.MerkleTree.Tree
 import proof.ProofOfHashrate.Proof
 import proof.domain.Account

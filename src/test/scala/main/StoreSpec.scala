@@ -8,30 +8,15 @@ import main.Helpers._
 import scala.collection.JavaConverters._
 import org.json4s.jackson.JsonMethods.parse
 import org.scalatest.{ BeforeAndAfter, FlatSpec, Matchers }
-import proof.MerkleTree.Tree
 import proof.domain.Account
 import proof.domain.CHAIN_ID._
 import scala.concurrent.duration._
 import scala.concurrent.Await
 
-//TODO use config to make the test db point to test directory
-class StoreSpec extends FlatSpec with Matchers with JsonSupport with BeforeAndAfter {
+class StoreSpec extends FlatSpec with Matchers with JsonSupport with CleanDBStore {
 
   lazy val mockAccountsTest = parse(accountsTestMock).extract[Seq[Account]]
   lazy val passingTestMockAccounts = parse(passingTestMock).extract[Seq[Account]]
-
-  //Clean the test store dir every time we're about to run the test
-  before {
-    Files.list(TreeStore.storeDir).iterator.asScala.map { file =>
-      Files.deleteIfExists(file)
-    }
-  }
-
-  after {
-    Files.list(TreeStore.storeDir).iterator.asScala.map { file =>
-      Files.deleteIfExists(file)
-    }
-  }
 
   it should "save the tree to a file" in {
     val rootDigest = Await.result(TreeManager.createAndSaveTree(BITCOIN_CHAIN, mockAccountsTest), 3 seconds)

@@ -1,0 +1,21 @@
+#!/bin/bash
+
+[ -z "$1" ] && (
+echo "usage: "
+echo "  pohc-cli help"
+) && exit 1
+
+URL="http://localhost:8080"
+CURL_OPTS="-sS -H \"Content-Type: application/json\""
+
+case $1 in
+"allDigest")
+        eval curl "$CURL_OPTS -X GET $URL/tree/allDigest"
+        ;;
+"tree")
+        eval curl "$CURL_OPTS -X GET $URL/tree/$2"
+        ;;
+"treeAccount")
+        eval curl "$CURL_OPTS -X GET $URL/tree/$2/accounts"
+        ;;
+esac

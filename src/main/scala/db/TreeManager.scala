@@ -2,7 +2,7 @@ package db
 
 import proof.MerkleTree.Tree
 import proof.ProofOfHashrate.Proof
-import proof.domain.{ Account, CHAIN_ID }
+import proof.domain.{ Account, CHAIN_ID, TreeDigestChainID }
 import proof.domain.CHAIN_ID._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -26,6 +26,10 @@ object TreeManager {
 
   def checkProof(digest: String, proof: Proof, account: Account): Boolean = {
     proof.isValid(digest, account)
+  }
+
+  def allTreesDigest(): Seq[TreeDigestChainID] = {
+    TreeStore.allTrees().map(tree => TreeDigestChainID(tree.chainId, tree.rootDigest))
   }
 
 }

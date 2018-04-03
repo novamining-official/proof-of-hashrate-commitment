@@ -6,6 +6,11 @@ import scala.math.Ordered
 
 package object domain {
 
+  case class TreeDigestChainID(
+    chainId: CHAIN_ID.Value,
+    digest: String
+  )
+
   case class ProofAccountCheck(
     proof: Proof,
     account: Account

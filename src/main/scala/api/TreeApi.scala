@@ -17,6 +17,8 @@ trait TreeApi extends JsonSupport with Directives {
           } ~ path("accounts") {
             complete(TreeManager.findTree(CHAIN_ID.withName(chainId), rootDigest).map(_.accounts))
           }
+        } ~ path("allDigests") {
+          complete(TreeManager.allTreesDigest())
         }
       } ~ put {
         pathEnd {

@@ -1,0 +1,5 @@
+| METHOD | URI             | PARAMS       | RESPONSE                                                                | NOTES                                                                                      |
+|--------|-----------------|--------------|-------------------------------------------------------------------------|--------------------------------------------------------------------------------------------|
+| GET    | /tree/allDigest | ------------ | [{    "chainId": String,    "digest": String }]                         | Returns the digest and chainId of all the trees found in memory                            |
+| GET    | /tree/<digest>  | chainId      | {    "chainId": String,    "accounts": [ Account ],    "root": [ Node ] | The chainId URL param is compulsory, the response is a full tree with accounts, and nodes. |
+|        |                 |              |                                                                         |                                                                                            |

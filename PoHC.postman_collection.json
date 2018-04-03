@@ -1,0 +1,159 @@
+{
+	"info": {
+		"name": "PoHC",
+		"_postman_id": "ba41bef9-96e9-4d4a-a788-fb947e3b995f",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "createTree",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n  {\"user\": \"Satoshi\", \"balance\": 9999999999999999999999999999999999999999999999999999999999921, \"nonce\": \"turtle\"},\n  {\"user\": \"Clara\", \"balance\": 822222222222222222222222222222222220, \"nonce\": \"bear\"},\n  {\"user\": \"Erik\", \"balance\": 2222222222222222222222222222220, \"nonce\": \"bird\"},\n  {\"user\": \"Luke\", \"balance\": 1111111111111165, \"nonce\": \"cat\"},\n  {\"user\": \"Lucy\", \"balance\": 2222222222222222222222230, \"nonce\": \"dog\"},\n  {\"user\": \"Mike\", \"balance\": 2522222222222222222222222, \"nonce\": \"shark\"},\n  {\"user\": \"dfghhhhhhhhhhhhhhhhhhhh\", \"balance\": 3222222222222222222228, \"nonce\": \"rhino\"},\n  {\"user\": \"Bob\", \"balance\": 0, \"nonce\": \"raccoon\"}\n]"
+				},
+				"url": {
+					"raw": "127.0.0.1:8080/tree?chainId=ETHEREUM_CHAIN",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"tree"
+					],
+					"query": [
+						{
+							"key": "chainId",
+							"value": "ETHEREUM_CHAIN",
+							"equals": true
+						}
+					]
+				},
+				"description": "make a tree from the given account list"
+			},
+			"response": []
+		},
+		{
+			"name": "getTree",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n  {\"user\": \"Satoshi\", \"balance\": 21, \"nonce\": \"turtle\"},\n  {\"user\": \"Nan\", \"balance\": 80, \"nonce\": \"bear\"},\n  {\"user\": \"Erik\", \"balance\": 20, \"nonce\": \"bird\"},\n  {\"user\": \"Luke\", \"balance\": 65, \"nonce\": \"cat\"},\n  {\"user\": \"Lucy\", \"balance\": 30, \"nonce\": \"dog\"},\n  {\"user\": \"Mike\", \"balance\": 25, \"nonce\": \"shark\"},\n  {\"user\": \"Alice\", \"balance\": 38, \"nonce\": \"rhino\"},\n  {\"user\": \"Bob\", \"balance\": 108, \"nonce\": \"raccoon\"}\n]"
+				},
+				"url": {
+					"raw": "127.0.0.1:8080/tree/df3aaf74aa67b4cd086a00b1768d0eac540e171399feb3187a6550aec099207d?chainId=ETHEREUM_CHAIN",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"tree",
+						"df3aaf74aa67b4cd086a00b1768d0eac540e171399feb3187a6550aec099207d"
+					],
+					"query": [
+						{
+							"key": "chainId",
+							"value": "ETHEREUM_CHAIN",
+							"equals": true
+						}
+					]
+				},
+				"description": "retrieve the accounts of a tree by its rootDigest"
+			},
+			"response": []
+		},
+		{
+			"name": "getTreeAccounts",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n  {\"user\": \"Satoshi\", \"balance\": 21, \"nonce\": \"turtle\"},\n  {\"user\": \"Nan\", \"balance\": 80, \"nonce\": \"bear\"},\n  {\"user\": \"Erik\", \"balance\": 20, \"nonce\": \"bird\"},\n  {\"user\": \"Luke\", \"balance\": 65, \"nonce\": \"cat\"},\n  {\"user\": \"Lucy\", \"balance\": 30, \"nonce\": \"dog\"},\n  {\"user\": \"Mike\", \"balance\": 25, \"nonce\": \"shark\"},\n  {\"user\": \"Alice\", \"balance\": 38, \"nonce\": \"rhino\"},\n  {\"user\": \"Bob\", \"balance\": 108, \"nonce\": \"raccoon\"}\n]"
+				},
+				"url": {
+					"raw": "127.0.0.1:8080/tree/df3aaf74aa67b4cd086a00b1768d0eac540e171399feb3187a6550aec099207d/accounts?chainId=ETHEREUM_CHAIN",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"tree",
+						"df3aaf74aa67b4cd086a00b1768d0eac540e171399feb3187a6550aec099207d",
+						"accounts"
+					],
+					"query": [
+						{
+							"key": "chainId",
+							"value": "ETHEREUM_CHAIN",
+							"equals": true
+						}
+					]
+				},
+				"description": "retrieve the accounts of a tree by its rootDigest"
+			},
+			"response": []
+		},
+		{
+			"name": "getAllTreesDigest",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n  {\"user\": \"Satoshi\", \"balance\": 21, \"nonce\": \"turtle\"},\n  {\"user\": \"Nan\", \"balance\": 80, \"nonce\": \"bear\"},\n  {\"user\": \"Erik\", \"balance\": 20, \"nonce\": \"bird\"},\n  {\"user\": \"Luke\", \"balance\": 65, \"nonce\": \"cat\"},\n  {\"user\": \"Lucy\", \"balance\": 30, \"nonce\": \"dog\"},\n  {\"user\": \"Mike\", \"balance\": 25, \"nonce\": \"shark\"},\n  {\"user\": \"Alice\", \"balance\": 38, \"nonce\": \"rhino\"},\n  {\"user\": \"Bob\", \"balance\": 108, \"nonce\": \"raccoon\"}\n]"
+				},
+				"url": {
+					"raw": "127.0.0.1:8080/tree/allDigest",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"tree",
+						"allDigest"
+					]
+				},
+				"description": "retrieve the accounts of a tree by its rootDigest"
+			},
+			"response": []
+		}
+	]
+}

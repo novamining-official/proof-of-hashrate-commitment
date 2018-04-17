@@ -33,6 +33,41 @@ class ProofSpec extends FlatSpec with Matchers with JsonSupport {
 
   }
 
+  it should "construct a tree with only one account inside" in {
+    val account = Account("firstUser", 1, "cheetah")
+    val tree = Tree.build(accounts = Seq(account))
+
+    tree.totalBalance shouldBe 1
+
+    val Some(proof) = tree.findProofByAccount(account)
+
+    proof.isValid(tree.rootDigest, account) shouldBe true
+
+  }
+
+  it should "be able to use data-rich account information as specified in the XNM whitepaper" in {
+
+    val user_hashrate = 123
+    val return_address = "35DM46fq45M7iU7GPVxLyRjuiE1EAReZn6"
+    val locktime_contract = "10000"
+    val coinbase_field = s"Using the XNM for user $return_address"
+    val upgrade_versionfield = 0
+
+    val accountString = s"$return_address | $locktime_contract | $coinbase_field | $upgrade_versionfield"
+
+    val richAccount = Account(accountString, user_hashrate, "nonce-here")
+    val accountList = richAccount :: randomAccounts.take(12).toList
+
+    val tree = Tree.build(accounts = accountList)
+    val Some(proof) = tree.findProofByAccount(richAccount)
+
+    proof.isValid(tree.rootDigest, richAccount) shouldBe true
+    richAccount.user.contains(return_address) shouldBe true
+    richAccount.user.contains(coinbase_field) shouldBe true
+    richAccount.user.contains(locktime_contract) shouldBe true
+
+  }
+
   it should "construct a tree and a valid proof" in {
     val tree = Tree.build(accounts = users)
     val rootDigest = tree.rootDigest

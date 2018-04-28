@@ -20,4 +20,4 @@ the disk storage is in plain text (JSON format).
 
 The packaging is done via <https://www.scala-sbt.org/sbt-native-packager>, you can produce a self contained executable (packed in a tarball)
 by issuing: `sbt universal:packageZipTarball` , this will create a .tar.gz inside "target/universal" folder, to run the 
-application just use the launchers in 'bin' folder.Custom parameters can be provided via cmd line as in `-Dapi.port=8088`, a complete list can be found in application.conf file.
+application just use the launchers in 'bin' folder.Custom parameters can be provided via cmd line as in `-Dapi.port=8088`, a complete list can be found in application.conf file. 

@@ -2,7 +2,7 @@
 
 ## Overview
 This tool aims at helping mining pool operators to prove their fairiness toward the users of the pool. 
-Implementation details and tech specs can be found in _allegato1_ . 
+Implementation details and tech specs can be found in _attachment_1_ . 
 
 ## Overview
 This tool is designed as a microservice, docker images can be built via the provided Dockerfile. 

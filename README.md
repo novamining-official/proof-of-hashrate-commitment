@@ -83,6 +83,7 @@ This Code of Conduct is adapted from the [Contributor Covenant](https://contribu
 
 ### Donations
 
+If you like to contribute for sustaining the development of this project, you can make a donation at following wallets.
 Bitcoin: `35wVmfBS7QB6dx8KkKuFfBSNPbg5hTuaKc`
 
 

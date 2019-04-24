@@ -1,4 +1,4 @@
-# Mining pool signalling
+# Proof-of-Hashrate-Commitment
 
 ## Overview
 This tool aims at helping mining pool operators to prove their fairiness toward the users of the pool. 

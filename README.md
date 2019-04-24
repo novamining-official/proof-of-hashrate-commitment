@@ -86,6 +86,7 @@ This Code of Conduct is adapted from the [Contributor Covenant](https://contribu
 If you like to give your contribution for sustaining the development of this project, you can make a donation at one of the following wallets:
 
 Bitcoin (BTC): `35wVmfBS7QB6dx8KkKuFfBSNPbg5hTuaKc`
-Bitcoin Cash (BCH): `35wVmfBS7QB6dx8KkKuFfBSNPbg5hTuaKc`
+
 Ethereum (ETH): `0x85078e4c4157441A7c59E5F16569bba7c77bDE86`
+
 Litecoin (LTC): `MJEwXPKUUQn4zQxXMJ2tYmEBff1BiY1oee`

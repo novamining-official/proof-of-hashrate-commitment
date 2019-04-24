@@ -12,4 +12,4 @@ The application is written in Scala and requires JDK8 and sbt. The data is store
 
 ## Installation
 
-The packaging is done via <https://www.scala-sbt.org/sbt-native-packager>, you can produce a self contained executable (packed in a tarball) by issuing: `sbt universal:packageZipTarball` , this will create a .tar.gz inside "target/universal" folder, to run the application just use the launchers in 'bin' folder. Custom parameters can be provided via command-line as in `-D api.port=8088`, a complete list can be found in application.conf file.
+The packaging is done via <https://www.scala-sbt.org/sbt-native-packager>, you can produce a self contained executable (packed in a tarball) by issuing: `sbt universal:packageZipTarball`, this will create a `.tar.gz` inside `"target/universal"` folder, to run the application just use the launchers in `'bin'` folder. Custom parameters can be provided via command-line as in `-D api.port=8088`, a complete list can be found in application.conf file.

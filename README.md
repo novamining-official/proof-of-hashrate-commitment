@@ -4,11 +4,11 @@
 
 This tool aims to help cloud mining providers to prove their fairness toward the users of the pool and is designed as a microservice, docker images can be built via the provided Dockerfile. The idea is based on the liability proof suggested by Gregory Maxwell. Simply put, given a set of users of a mining pool and their individual hashrate, we encode this information info a merkle-tree data structure of which the pool publishes the root digest in the coinbase of a mined block, then every user is provided with its branch of the tree as a Proof-of-Hashrate-Commitment.
 
-Implementation details and tech specs can be found in _attachment_1_. You can create trees by PUTting a list of "Accounts" via the API, accounts are comprised of {user, balance, nonce} with balance being a floating point number. Is also possible to retrieve a Proof for a user given its account and the stored tree's root-digest, likewise you can ask the API to verify a Proof for a given account.
+Implementation details and tech specs can be found in _attachment_1_. You can create trees by PUTting a list of "Accounts" via the API, accounts are comprised of `{user, balance, nonce}` with balance being a floating point number. Is also possible to retrieve a Proof for a user given its account and the stored tree's root-digest, likewise you can ask the API to verify a Proof for a given account. The data is stored both in memory and on disk, the disk storage is in plain text (JSON format).
 
-## Development
+## Requirements
 
-The application is written in Scala and requires JDK8 and sbt. The data is stored both in memory and on disk, the disk storage is in plain text (JSON format). 
+The application is written in [Scala](https://www.scala-lang.org/) and requires [JDK8](https://www.oracle.com/technetwork/java/javaee/downloads/jdk8-downloads-2133151.html) and [sbt](https://www.scala-sbt.org/).  
 
 
 ## Installation

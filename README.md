@@ -1,5 +1,5 @@
 # Proof-of-Hashrate-Commitment
-
+[![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/Naereen/StrapDown.js/blob/master/LICENSE) 
 ## Overview
 
 This tool aims to help cloud mining providers to prove their fairness toward the users of the pool and is designed as a microservice, docker images can be built via the provided Dockerfile. The idea is based on the liability proof suggested by Gregory Maxwell. Simply put, given a set of users of a mining pool and their individual hashrate, we encode this information info a merkle-tree data structure of which the pool publishes the root digest in the coinbase of a mined block, then every user is provided with its branch of the tree as a Proof-of-Hashrate-Commitment.

@@ -84,7 +84,7 @@ This Code of Conduct is adapted from the [Contributor Covenant](https://contribu
 
 ### Donations
 
-If you like to give your contribution for sustaining the development of this project, you can make a donation at one of the following wallets:
+If you like to give your contribution for sustaining the development of this project, you can make a donation at one of the following wallets: does it will be really appreciated! 😊🙏
 
 Bitcoin (BTC): `35wVmfBS7QB6dx8KkKuFfBSNPbg5hTuaKc`
 

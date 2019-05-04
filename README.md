@@ -88,6 +88,14 @@ If you like to give your contribution for sustaining the development of this pro
 
 Bitcoin (BTC): `35wVmfBS7QB6dx8KkKuFfBSNPbg5hTuaKc`
 
+Bitcoin Cash (BCH): `1FbAVwX1TXfCxcYAdAjLFScBN63QkenXUi`
+
 Ethereum (ETH): `0x85078e4c4157441A7c59E5F16569bba7c77bDE86`
 
 Litecoin (LTC): `MJEwXPKUUQn4zQxXMJ2tYmEBff1BiY1oee`
+
+Binance Coin (BNB) ERC-20 Tokens: `0x85078e4c4157441A7c59E5F16569bba7c77bDE86`
+
+Binance Coin (BNB) Mainnet Tokens:
+Address: `bnb136ns6lfw4zs5hg4n85vdthaad7hq5m4gtkgf23`
+Memo: `105267481`

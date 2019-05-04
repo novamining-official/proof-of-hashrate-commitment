@@ -99,5 +99,5 @@ Binance Coin (BNB):
 BNB ERC-20 Tokens: `0x85078e4c4157441A7c59E5F16569bba7c77bDE86`
 
 BNB Mainnet Tokens:
-Address: `bnb136ns6lfw4zs5hg4n85vdthaad7hq5m4gtkgf23`
+`bnb136ns6lfw4zs5hg4n85vdthaad7hq5m4gtkgf23`
 Memo: `105267481`

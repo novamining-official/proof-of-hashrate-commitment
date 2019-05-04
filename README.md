@@ -94,8 +94,10 @@ Ethereum (ETH): `0x85078e4c4157441A7c59E5F16569bba7c77bDE86`
 
 Litecoin (LTC): `MJEwXPKUUQn4zQxXMJ2tYmEBff1BiY1oee`
 
-Binance Coin (BNB) ERC-20 Tokens: `0x85078e4c4157441A7c59E5F16569bba7c77bDE86`
+Binance Coin (BNB):
 
-Binance Coin (BNB) Mainnet Tokens:
+BNB ERC-20 Tokens: `0x85078e4c4157441A7c59E5F16569bba7c77bDE86`
+
+BNB Mainnet Tokens:
 Address: `bnb136ns6lfw4zs5hg4n85vdthaad7hq5m4gtkgf23`
 Memo: `105267481`
